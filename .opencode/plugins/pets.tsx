@@ -1,20 +1,244 @@
 /** @jsxImportSource @opentui/solid */
-import { createSignal, onMount } from "solid-js"
+import { createSignal, onMount, onCleanup } from "solid-js"
 import type { TuiPlugin, TuiPluginModule } from "@opencode-ai/plugin/tui"
+
+type PetState = "idle" | "happy" | "sleeping" | "eating" | "playing" | "excited" | "sad"
+const STATES: PetState[] = ["idle", "happy", "sleeping", "eating", "playing", "excited", "sad"]
+const HL = 8
+
+const pad = (lines: string[], width: number) => {
+  const padded = lines.map(l => l.padEnd(width))
+  while (padded.length < HL) padded.push(" ".repeat(width))
+  return padded
+}
+
+const catFrames: Record<PetState, string[][]> = {
+  idle: [
+    pad(["  /\\_____/\\  "," /  o   o  \\ ","(  == ^ ==  )"," \\  '-'  /  "," (__)  (__) "], 14),
+    pad(["  /\\_____/\\  "," /  -   -  \\ ","(  == ^ ==  )"," \\  '-'  /  "," (__)  (__) "], 14),
+  ],
+  happy: [
+    pad(["  /\\_____/\\  "," /  ^   ^  \\ ","(  == ω ==  )"," \\  '-'  /  "," (__)  (__) "], 14),
+    pad(["  /\\_____/\\  "," /  ^   ^  \\ ","(  == ω ==  )"," \\  '-'  /  ","  | ♥ |    "," (__) (__)  "], 14),
+  ],
+  sleeping: [
+    pad(["  /\\_____/\\  "," /  -   -  \\ ","(  == z z  )"," \\  '-'  /  "," (__)  (__) "], 14),
+    pad(["  /\\_____/\\  "," /  -   -  \\ ","(  == Z z  )"," \\  '-'  /  "," (__)  (__) "], 14),
+  ],
+  eating: [
+    pad(["  /\\_____/\\  "," /  o   o  \\ ","(  == ω ==  )"," \\  nom /  "," (__)  (__) "], 14),
+    pad(["  /\\_____/\\  "," /  ^   ^  \\ ","(  == ω ==  )"," \\  nom /  "," (__)  (__) "], 14),
+  ],
+  playing: [
+    pad(["    /\\_____/\\ ","   /  ^   ^  \\"," ( == ω ==  ) ","  \\  '-'  /  ","  (__)  (__) "], 14),
+    pad(["  /\\_____/\\  "," /  ^   ^  \\ ","(  == ω ==  )"," \\  '-'  /  "," (__)  (__) "], 14),
+  ],
+  excited: [
+    pad(["  /\\_____/\\  "," /  ^   ^  \\ ","(  == ω ==  )"," \\  '-'  /  ","  | ♥ |    "," (__) (__)  "], 14),
+    pad(["  /\\_____/\\  "," /  ^   ^  \\ ","(  == ω==  )"," \\  '-'  /  "," (__)  (__) "], 14),
+  ],
+  sad: [
+    pad(["  /\\_____/\\  "," /  -   -  \\ ","(  == T T  )"," \\  '-'  /  "," (__)  (__) "], 14),
+    pad(["  /\\_____/\\  "," /  -   -  \\ ","(  == T T  )"," \\  '-'  /  "," (__)  (__) ","   ;_;     "], 14),
+  ],
+}
+
+const dogFrames: Record<PetState, string[][]> = {
+  idle: [
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    o__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16),
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    -__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16),
+  ],
+  happy: [
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   wag wag!  "], 16),
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16),
+  ],
+  sleeping: [
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    -__-    )"," (   /\\___/\\   )","  `--'    `--'  ","   zzz      "], 16),
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    -__-    )"," (   /\\___/\\   )","  `--'    `--'  ","   ZZZ      "], 16),
+  ],
+  eating: [
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    o__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   nom nom  "], 16),
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   nom!     "], 16),
+  ],
+  playing: [
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   wag wag!  "], 16),
+    pad(["     /\\  /\\   ","    /\\../\\   ","  (  ω__o  )  "," ( /\\___/\\ ) ","  `--'`--'    "], 16),
+  ],
+  excited: [
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   BORK BORK "], 16),
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16),
+  ],
+  sad: [
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    T__T    )"," (   /\\___/\\   )","  `--'    `--'  "], 16),
+    pad(["   /\\    /\\   ","  /  \\../  \\  "," (    T__T    )"," (   /\\___/\\   )","  `--'    `--'  ","   ;_;      "], 16),
+  ],
+}
+
+const hamFrames: Record<PetState, string[][]> = {
+  idle: [
+    pad([" (\\\\/)  (\\\\/) ","  ( ..)  ( ..) ","   `--'`--'    ","    (   )    ","     ( )     "], 14),
+    pad([" (\\\\/)  (\\\\/) ","  ( -.)  ( -.) ","   `--'`--'    ","    (   )    ","     ( )     "], 14),
+  ],
+  happy: [
+    pad([" (\\\\/)  (\\\\/) ","  ( ^.)  ( ^.) ","   `--'`--'    ","    ( ♥ )    ","   run run! "], 14),
+    pad([" (\\\\/)  (\\\\/) ","  ( ^.)  ( ^.) ","   `--'`--'    ","    ( ♥ )    "], 14),
+  ],
+  sleeping: [
+    pad([" (\\\\/)  (\\\\/) ","  ( -.)  ( -.) ","   `--'`--'    ","    zzz     ","     ( )     "], 14),
+    pad([" (\\\\/)  (\\\\/) ","  ( -.)  ( -.) ","   `--'`--'    ","    ZZZ     ","     ( )     "], 14),
+  ],
+  eating: [
+    pad([" (\\\\/)  (\\\\/) ","  ( o.)  ( o.) ","   `--'`--'    ","    nom     ","     ( )     "], 14),
+    pad([" (\\\\/)  (\\\\/) ","  ( ^.)  ( ^.) ","   `--'`--'    ","    nom!    ","     ( )     "], 14),
+  ],
+  playing: [
+    pad([" (\\\\/)  (\\\\/) ","  ( ^.)  ( ^.) ","   `--'`--'    ","    ( ♥ )    ","   run run! "], 14),
+    pad([" (\\\\/)  (\\\\/) ","  ( ^.)  ( ^.) ","   `--'`--'    ","   wheel!   ","   run run! "], 14),
+  ],
+  excited: [
+    pad([" (\\\\/)  (\\\\/) ","  ( ^.)  ( ^.) ","   `--'`--'    ","    ( ♥ )    ","   SQUEAK!  "], 14),
+    pad([" (\\\\/)  (\\\\/) ","  ( ^.)  ( ^.) ","   `--'`--'    ","    ( ♥ )    "], 14),
+  ],
+  sad: [
+    pad([" (\\\\/)  (\\\\/) ","  ( T.)  ( T.) ","   `--'`--'    ","    ;_;     ","     ( )     "], 14),
+    pad([" (\\\\/)  (\\\\/) ","  ( T.)  ( T.) ","   `--'`--'    ","   ;_;      ","     ( )     "], 14),
+  ],
+}
+
+const ghostFrames: Record<PetState, string[][]> = {
+  idle: [
+    pad(["   .-.     ","  (o o)    ","  | O |    ","  '~~~'    "], 12),
+    pad(["   .-.     ","  (o o)    ","  | O |    ","  '~~~'    "], 12),
+  ],
+  happy: [
+    pad(["   .-.     ","  (^ ^)    ","  | ω |    ","  '~~~'    ","   boo!    "], 12),
+    pad(["   .-.     ","  (^ ^)    ","  | ♥ |    ","  '~~~'    ","   boo!    "], 12),
+  ],
+  sleeping: [
+    pad(["   .-.     ","  (- -)    ","  | z |    ","  '~~~'    "], 12),
+    pad(["   .-.     ","  (- -)    ","  | Z |    ","  '~~~'    "], 12),
+  ],
+  eating: [
+    pad(["   .-.     ","  (o o)    ","  | ω |    ","  '~~~'    ","   nom~    "], 12),
+    pad(["   .-.     ","  (o o)    ","  | ω |    ","  '~~~'    ","   nom!    "], 12),
+  ],
+  playing: [
+    pad(["   .-.     ","  (^ ^)    ","  | ω |    ","  '~~~'    ","   ~~~     "], 12),
+    pad(["    .-.    ","   (^ ^)   ","   | ω |   ","   '~~~'   ","    ~~~    "], 12),
+  ],
+  excited: [
+    pad(["   .-.     ","  (^ ^)    ","  | ♥ |    ","  '~~~'    ","   BOO!    "], 12),
+    pad(["   .-.     ","  (^ ^)    ","  | ♥ |    ","  '~~~'    "], 12),
+  ],
+  sad: [
+    pad(["   .-.     ","  (T T)    ","  |   |    ","  '~~~'    "], 12),
+    pad(["   .-.     ","  (T T)    ","  | ; |    ","  '~~~'    "], 12),
+  ],
+}
+
+const corgiFrames: Record<PetState, string[][]> = {
+  idle: [
+    pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   "], 16),
+    pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | -  - |  |","  \\ \\__/  /  / ","   `------'   "], 16),
+  ],
+  happy: [
+    pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   ","   happy!    "], 16),
+    pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   ","   yip!      "], 16),
+  ],
+  sleeping: [
+    pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | -  - |  |","  \\ \\__/  /  / ","   `------'   ","   zzz      "], 16),
+    pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | -  - |  |","  \\ \\__/  /  / ","   `------'   ","   ZZZ      "], 16),
+  ],
+  eating: [
+    pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   ","   nom nom  "], 16),
+    pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   ","   nom!     "], 16),
+  ],
+  playing: [
+    pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   ","   yip yip! "], 16),
+    pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   ","   bork!    "], 16),
+  ],
+  excited: [
+    pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   ","   BORK BORK"], 16),
+    pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   "], 16),
+  ],
+  sad: [
+    pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | T  T |  |","  \\ \\__/  /  / ","   `------'   "], 16),
+    pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | T  T |  |","  \\ \\__/  /  / ","   `------'   ","   ;_;      "], 16),
+  ],
+}
+
+const STATE_COLORS: Record<PetState, string> = {
+  idle: "#bd93f9",
+  happy: "#50fa7b",
+  sleeping: "#6272a4",
+  eating: "#ffb86c",
+  playing: "#ff79c6",
+  excited: "#f1fa8c",
+  sad: "#ff5555",
+}
+
+const STATE_ICONS: Record<PetState, string> = {
+  idle: "💤",
+  happy: "😊",
+  sleeping: "😴",
+  eating: "🍖",
+  playing: "🎮",
+  excited: "⚡",
+  sad: "😢",
+}
+
+const allPetFrames: Record<string, Record<PetState, string[][]>> = {
+  cat: catFrames,
+  dog: dogFrames,
+  hamster: hamFrames,
+  ghost: ghostFrames,
+  corgi: corgiFrames,
+}
 
 const PetsPlugin: TuiPlugin = async (api) => {
   const [frame, setFrame] = createSignal(0)
   const [happiness, setHappiness] = createSignal(80)
   const [petType, setPetType] = createSignal("cat")
+  const [state, setState] = createSignal<PetState>("idle")
+
+  let frameInterval: ReturnType<typeof setInterval> | undefined
+  let stateTimeout: ReturnType<typeof setTimeout> | undefined
+
+  const scheduleNextState = () => {
+    const delay = 10000 + Math.random() * 20000
+    stateTimeout = setTimeout(() => {
+      const next = STATES[Math.floor(Math.random() * STATES.length)]
+      setState(next)
+      setFrame(0)
+      scheduleNextState()
+    }, delay)
+  }
+
+  const overrideState = (s: PetState, duration: number) => {
+    if (stateTimeout) clearTimeout(stateTimeout)
+    setState(s)
+    setFrame(0)
+    stateTimeout = setTimeout(() => {
+      setState("idle")
+      setFrame(0)
+      scheduleNextState()
+    }, duration)
+  }
 
   onMount(() => {
-    setInterval(() => setFrame(f => f + 1), 300)
+    frameInterval = setInterval(() => setFrame(f => f + 1), 500)
+    scheduleNextState()
   })
 
-  const feed = () => { setHappiness(h => Math.min(100, h + 15)); api.ui.toast({ message: "Fed!", variant: "success" }) }
-  const play = () => { setHappiness(h => Math.min(100, h + 20)); api.ui.toast({ message: "Played!", variant: "success" }) }
-  const petIt = () => { setHappiness(h => Math.min(100, h + 10)); api.ui.toast({ message: "Pet!", variant: "success" }) }
-  const switchPet = (t: string) => { setPetType(t); setHappiness(80); api.ui.toast({ message: t + "!", variant: "success" }) }
+  onCleanup(() => {
+    if (frameInterval) clearInterval(frameInterval)
+    if (stateTimeout) clearTimeout(stateTimeout)
+  })
+
+  const feed = () => { setHappiness(h => Math.min(100, h + 15)); overrideState("eating", 5000); api.ui.toast({ message: "Fed!", variant: "success" }) }
+  const play = () => { setHappiness(h => Math.min(100, h + 20)); overrideState("playing", 5000); api.ui.toast({ message: "Played!", variant: "success" }) }
+  const petIt = () => { setHappiness(h => Math.min(100, h + 10)); overrideState("happy", 3000); api.ui.toast({ message: "Pet!", variant: "success" }) }
+  const switchPet = (t: string) => { setPetType(t); setHappiness(80); setState("idle"); setFrame(0); api.ui.toast({ message: t + "!", variant: "success" }) }
 
   api.command.register(() => [
     { title: "Feed", value: "pet feed", description: "Feed", slash: { name: "pet feed" }, onSelect: feed },
@@ -27,48 +251,25 @@ const PetsPlugin: TuiPlugin = async (api) => {
     { title: "Corgi", value: "pet corgi", description: "Corgi", slash: { name: "pet corgi" }, onSelect: () => switchPet("corgi") },
   ])
 
-  const cat: string[][] = [
-    ["  /\\_____/\\  "," /  o   o  \\ ","(  == ^ ==  )"," \\  '-'  /  "," (__)  (__) "],
-    ["  /\\_____/\\  "," /  -   -  \\ ","(  == ^ ==  )"," \\  '-'  /  "," (__)  (__) "],
-    ["  /\\_____/\\  "," /  ^   ^  \\ ","(  == ω ==  )"," \\  '-'  /  "," (__)  (__) "],
-    ["  /\\_____/\\  "," /  ^   ^  \\ ","(  == ω ==  )"," \\  '-'  /  ","  | ♥ |    "," (__) (__)  "],
-  ]
-  const dog: string[][] = [
-    ["   /\\    /\\   ","  /  \\../  \\  "," (    o__o    )"," (   /\\___/\\   )","  `--'    `--'  "],
-    ["   /\\    /\\   ","  /  \\../  \\  "," (    -__o    )"," (   /\\___/\\   )","  `--'    `--'  "],
-    ["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   wag wag!  "],
-  ]
-  const ham: string[][] = [
-    [" (\\\\/)  (\\\\/) ","  ( ..)  ( ..) ","   `--'`--'    ","    (   )    ","     ( )     "],
-    [" (\\\\/)  (\\\\/) ","  ( -.)  ( -.) ","   `--'`--'    ","    (   )    ","     ( )     "],
-    [" (\\\\/)  (\\\\/) ","  ( ^.)  ( ^.) ","   `--'`--'    ","    ( ♥ )    ","   run run! "],
-  ]
-  const ghost: string[][] = [
-    ["   .-.     ","  (o o)    ","  | O |    ","  '~~~'    "],
-    ["   .-.     ","  (- -)    ","  | O |    ","  '~~~'    ","   ~~~     "],
-    ["   .-.     ","  (^ ^)    ","  | ω |    ","  '~~~'    ","   boo!    "],
-  ]
-  const corgi: string[][] = [
-    ["  /\\^..^/\\  "," /  \\    /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   "],
-    ["  /\\^..^/\\  "," /  \\    /  \\ ","|  | -  - |  |","  \\ \\__/  /  / ","   `------'   "],
-    ["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   ","   happy!    "],
-  ]
-
-  const all: Record<string, string[][]> = { cat, dog, hamster: ham, ghost, corgi }
-
   api.slots.register({
     order: 350,
     slots: {
       sidebar_content() {
-        const frames = all[petType()] || cat
-        const idx = frame() % frames.length
-        const sprite = frames[idx] || cat[0]
+        const petFrames = allPetFrames[petType()] || catFrames
+        const currentState = state()
+        const stateFrames = petFrames[currentState] || petFrames.idle
+        const idx = frame() % stateFrames.length
+        const sprite = stateFrames[idx] || petFrames.idle[0]
+        const color = STATE_COLORS[currentState]
         const bar = "█".repeat(Math.floor(happiness() / 10)) + "░".repeat(10 - Math.floor(happiness() / 10))
         return (
           <box paddingX={1} paddingY={1} flexDirection="column" gap={1}>
-            <text fg="#bd93f9"><b>🐱 {petType()}</b></text>
-            <box flexDirection="column" alignItems="center">
-              {sprite.map((l: string, i: number) => <text key={i} fg="#bd93f9">{l}</text>)}
+            <box flexDirection="row" gap={1}>
+              <text fg="#bd93f9"><b>🐱 {petType()}</b></text>
+              <text fg={color}>{STATE_ICONS[currentState]} {currentState}</text>
+            </box>
+            <box flexDirection="column" alignItems="center" minHeight={HL}>
+              {sprite.map((l: string, i: number) => <text key={i} fg={color}>{l}</text>)}
             </box>
             <text fg="#f8f8f2">Happy: {bar} {happiness()}%</text>
             <text fg="#6272a4">/pet feed /pet play /pet dog</text>
