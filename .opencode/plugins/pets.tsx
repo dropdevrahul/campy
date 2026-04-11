@@ -170,32 +170,32 @@ const corgiFrames: Record<PetState, string[][]> = {
 const W = 18
 const robotFrames: Record<PetState, string[][]> = {
   idle: [
-    pad(["     i   i        ","   .───────.      ","   │ O   O │      ","   │  ┌─┐  │      ","   └───┬───┘      ","     ║ ║          ","    ═══════        "], W),
-    pad(["     i   i        ","   .───────.      ","   │ O   O │      ","   │  ┌─┐  │      ","   └───┬───┘      ","     ║ ║          ","    ═══════        "], W),
+    pad(["    ___     ___  ","   | O |---| O | ","   |___/   \\___|" ,"      \\_|_/      "], W),
+    pad(["    ___     ___  ","   | O |---| O | ","   |___/   \\___|" ,"      \\_|_/      "], W),
   ],
   happy: [
-    pad(["     i   i        ","   .───────.      ","   │ ^ ♡ ^ │      ","   │  ┌─┐  │      ","   └───┬───┘      ","  beep boop!      ","    ═══════        "], W),
-    pad(["     i   i        ","   .───────.      ","   │ ^ ♡ ^ │      ","   │  ┌─┐  │      ","   └───┬───┘      ","     ♥ ♥          ","    ═══════        "], W),
+    pad(["    ___     ___  ","   | ^ |---| ^ | ","   |___/   \\___|" ,"      \\_|_/  ♥   "], W),
+    pad(["    ___     ___  ","   | ^ |---| ^ | ","   |___/   \\___|" ,"      \\_|_/      "], W),
   ],
   sleeping: [
-    pad(["     i   i        ","   .───────.      ","   │ -   - │      ","   │  zzz   │      ","   └───┬───┘      ","     zzz...       ","    ═══════        "], W),
-    pad(["     i   i        ","   .───────.      ","   │ -   - │      ","   │  ZZZ   │      ","   └───┬───┘      ","     ZZZ...       ","    ═══════        "], W),
+    pad(["    ___     ___  ","   | - |---| - | ","   |___/   \\___|" ,"      \\_|_/ zzz  "], W),
+    pad(["    ___     ___  ","   | - |---| - | ","   |___/   \\___|" ,"      \\_|_/ ZZZ  "], W),
   ],
   eating: [
-    pad(["     i   i        ","   .───────.      ","   │ ◉   ◉ │      ","   │  nom   │      ","   └───┬───┘      ","     nom!         ","    ═══════        "], W),
-    pad(["     i   i        ","   .───────.      ","   │ ◉   ◉ │      ","   │  nom   │      ","   └───┬───┘      ","     nom nom      ","    ═══════        "], W),
+    pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"    nom nom !    "], W),
+    pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"     nom !       "], W),
   ],
   playing: [
-    pad(["     i   i        ","   .───────.      ","   │ ω ♡ ω │      ","   │  ┌─┐  │      ","   └───┬───┘      ","  > boop <        ","    ═══════        "], W),
-    pad(["     i   i        ","   .───────.      ","   │ ω ♡ ω │      ","   │  ┌─┐  │      ","   └───┬───┘      ","  > beep <        ","    ═══════        "], W),
+    pad(["    ___     ___  ","   | ω |---| ω | ","   |___/   \\___|" ,"   > boop <      "], W),
+    pad(["    ___     ___  ","   | ω |---| ω | ","   |___/   \\___|" ,"   > beep <      "], W),
   ],
   excited: [
-    pad(["     i   i        ","   .───────.      ","   │ ◉ ♡ ◉ │      ","   │  ┌─┐  │      ","   └───┬───┘      ","  BEEP BOOP!      ","    ═══════        "], W),
-    pad(["     i   i        ","   .───────.      ","   │ ◉ ♡ ◉ │      ","   │  ┌─┐  │      ","   └───┬───┘      ","   !! ♥ !!        ","    ═══════        "], W),
+    pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"   !! ♥ !!       "], W),
+    pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"   BEEP BOOP!    "], W),
   ],
   sad: [
-    pad(["     i   i        ","   .───────.      ","   │ T   T │      ","   │  err  │      ","   └───┬───┘      ","     ;_;          ","    ═══════        "], W),
-    pad(["     i   i        ","   .───────.      ","   │ T   T │      ","   │  404  │      ","   └───┬───┘      ","    404 :(         ","    ═══════        "], W),
+    pad(["    ___     ___  ","   | T |---| T | ","   |___/   \\___|" ,"      ;_;        "], W),
+    pad(["    ___     ___  ","   | T |---| T | ","   |___/   \\___|" ,"     404 :(       "], W),
   ],
 }
 
@@ -237,14 +237,27 @@ const allPetFrames: Record<string, Record<PetState, string[][]>> = {
   robot: robotFrames,
 }
 
+const IDLE_PHRASES = [
+  "Need a hand?",
+  "Looks good!",
+  "Can I help?",
+  "Watching you code...",
+  "Beep boop!",
+  "I'm here!",
+  "Keep going!",
+  "What's next?",
+]
+
 const PetsPlugin: TuiPlugin = async (api) => {
   const [frame, setFrame] = createSignal(0)
   const [happiness, setHappiness] = createSignal(80)
   const [petType, setPetType] = createSignal("cat")
   const [state, setState] = createSignal<PetState>("idle")
+  const [speechBubble, setSpeechBubble] = createSignal("")
 
   let frameInterval: ReturnType<typeof setInterval> | undefined
   let stateTimeout: ReturnType<typeof setTimeout> | undefined
+  let speechTimeout: ReturnType<typeof setTimeout> | undefined
 
   const scheduleNextState = () => {
     const delay = 10000 + Math.random() * 20000
@@ -256,10 +269,17 @@ const PetsPlugin: TuiPlugin = async (api) => {
     }, delay)
   }
 
-  const overrideState = (s: PetState, duration: number) => {
+  const showSpeech = (text: string, duration = 5000) => {
+    if (speechTimeout) clearTimeout(speechTimeout)
+    setSpeechBubble(text)
+    speechTimeout = setTimeout(() => setSpeechBubble(""), duration)
+  }
+
+  const overrideState = (s: PetState, duration: number, speech?: string) => {
     if (stateTimeout) clearTimeout(stateTimeout)
     setState(s)
     setFrame(0)
+    if (speech) showSpeech(speech, duration)
     stateTimeout = setTimeout(() => {
       setState("idle")
       setFrame(0)
@@ -272,36 +292,41 @@ const PetsPlugin: TuiPlugin = async (api) => {
     scheduleNextState()
 
     api.event.on("message.part.delta", () => {
-      overrideState("excited", 3000)
+      overrideState("excited", 3000, "Thinking...")
     })
 
     api.event.on("session.error", () => {
-      overrideState("sad", 5000)
+      overrideState("sad", 5000, "Error! Let me help...")
     })
 
     api.event.on("session.idle", () => {
       if (stateTimeout) clearTimeout(stateTimeout)
       setState("idle")
       setFrame(0)
+      showSpeech(IDLE_PHRASES[Math.floor(Math.random() * IDLE_PHRASES.length)], 4000)
       scheduleNextState()
     })
 
-    api.event.on("file.edited", () => {
-      overrideState("eating", 4000)
+    api.event.on("file.edited", (data: any) => {
+      const path = data?.path || data?.filePath || ""
+      const filename = path ? path.split("/").pop() || path : ""
+      overrideState("eating", 4000, filename ? `Edited ${filename}!` : "File saved!")
     })
 
     api.event.on("tui.prompt.append", () => {
-      overrideState("happy", 2000)
+      overrideState("happy", 2000, "I'm here!")
     })
 
-    api.event.on("command.executed", () => {
-      overrideState("happy", 3000)
+    api.event.on("command.executed", (data: any) => {
+      const cmd = data?.command || ""
+      overrideState("happy", 3000, cmd ? `Ran ${cmd}!` : "Done!")
     })
   })
 
   onCleanup(() => {
     if (frameInterval) clearInterval(frameInterval)
     if (stateTimeout) clearTimeout(stateTimeout)
+    if (speechTimeout) clearTimeout(speechTimeout)
   })
 
   const feed = () => { setHappiness(h => Math.min(100, h + 15)); overrideState("eating", 5000); api.ui.toast({ message: "Fed!", variant: "success" }) }
@@ -332,12 +357,21 @@ const PetsPlugin: TuiPlugin = async (api) => {
         const sprite = stateFrames[idx] || petFrames.idle[0]
         const color = STATE_COLORS[currentState]
         const bar = "█".repeat(Math.floor(happiness() / 10)) + "░".repeat(10 - Math.floor(happiness() / 10))
+        const bubble = speechBubble()
         return (
           <box paddingX={1} paddingY={1} flexDirection="column" gap={1}>
             <box flexDirection="row" gap={1}>
               <text fg="#bd93f9"><b>{PET_ICONS[petType()] || "🐾"} {petType()}</b></text>
               <text fg={color}>{STATE_ICONS[currentState]} {currentState}</text>
             </box>
+            {bubble && petType() === "robot" ? (
+              <box flexDirection="column" gap={0}>
+                <text fg="#f8f8f2"> .----------------.</text>
+                <text fg="#f8f8f2">({bubble.padEnd(16)})</text>
+                <text fg="#f8f8f2"> '------.  .-----'</text>
+                <text fg="#f8f8f2">        | /</text>
+              </box>
+            ) : null}
             <box flexDirection="column" alignItems="center" minHeight={HL}>
               {sprite.map((l: string, i: number) => <text key={i} fg={color}>{l}</text>)}
             </box>
