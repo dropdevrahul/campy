@@ -364,7 +364,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
               <text fg="#bd93f9"><b>{PET_ICONS[petType()] || "🐾"} {petType()}</b></text>
               <text fg={color}>{STATE_ICONS[currentState]} {currentState}</text>
             </box>
-            {bubble && petType() === "robot" ? (
+            {bubble ? (
               <box flexDirection="column" gap={0}>
                 <text fg="#f8f8f2"> .----------------.</text>
                 <text fg="#f8f8f2">({bubble.padEnd(16)})</text>
