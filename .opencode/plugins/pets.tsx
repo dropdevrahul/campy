@@ -167,6 +167,37 @@ const corgiFrames: Record<PetState, string[][]> = {
   ],
 }
 
+const claudeFrames: Record<PetState, string[][]> = {
+  idle: [
+    pad(["   \\|/       ","  ( o o )    ","   |   |     ","  _/   \\_    "], 14),
+    pad(["   /|\\       ","  ( o o )    ","   |   |     ","  _/   \\_    "], 14),
+  ],
+  happy: [
+    pad(["   \\|/       ","  ( ^ ^ )    ","   | ♥ |     ","  _/   \\_    "], 14),
+    pad(["   \\|/       ","  ( ^ω^ )    ","   | ♥ |     ","  _/ \\_/ \\_  "], 14),
+  ],
+  sleeping: [
+    pad(["   \\|/       ","  ( - - )    ","   | z |     ","  _/   \\_    "], 14),
+    pad(["   \\|/       ","  ( - - )    ","   | Z |     ","  _/   \\_    ","    zzz      "], 14),
+  ],
+  eating: [
+    pad(["   \\|/       ","  ( o nom )  ","   |   |     ","  _/   \\_    "], 14),
+    pad(["   \\|/       ","  ( nom o )  ","   | ♥ |     ","  _/   \\_    "], 14),
+  ],
+  playing: [
+    pad(["   \\|/    *  ","  ( ^ ^ )    ","   | ♥ |     ","  _/ \\_/ \\_  "], 14),
+    pad(["   /|\\       ","  ( ^ ^ )*   ","   | ♥ |     ","  _/   \\_    "], 14),
+  ],
+  excited: [
+    pad(["   \\|/       ","  ( O O )    ","   | ! |     ","  _/ \\_/ \\_  "], 14),
+    pad(["   /|\\       ","  ( ω ω )    ","   | ! |     ","  _/ \\_/ \\_  "], 14),
+  ],
+  sad: [
+    pad(["   \\|/       ","  ( T T )    ","   |   |     ","  _/   \\_    "], 14),
+    pad(["   \\|/       ","  ( T T )    ","   |   |     ","  _/   \\_    ","    ;_;      "], 14),
+  ],
+}
+
 const STATE_COLORS: Record<PetState, string> = {
   idle: "#bd93f9",
   happy: "#50fa7b",
@@ -187,12 +218,22 @@ const STATE_ICONS: Record<PetState, string> = {
   sad: "😢",
 }
 
+const PET_ICONS: Record<string, string> = {
+  cat: "🐱",
+  dog: "🐶",
+  hamster: "🐹",
+  ghost: "👻",
+  corgi: "🐶",
+  claude: "🔍",
+}
+
 const allPetFrames: Record<string, Record<PetState, string[][]>> = {
   cat: catFrames,
   dog: dogFrames,
   hamster: hamFrames,
   ghost: ghostFrames,
   corgi: corgiFrames,
+  claude: claudeFrames,
 }
 
 const PetsPlugin: TuiPlugin = async (api) => {
@@ -249,6 +290,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
     { title: "Hamster", value: "pet hamster", description: "Hamster", slash: { name: "pet hamster" }, onSelect: () => switchPet("hamster") },
     { title: "Ghost", value: "pet ghost", description: "Ghost", slash: { name: "pet ghost" }, onSelect: () => switchPet("ghost") },
     { title: "Corgi", value: "pet corgi", description: "Corgi", slash: { name: "pet corgi" }, onSelect: () => switchPet("corgi") },
+    { title: "Claude", value: "pet claude", description: "N33DLE", slash: { name: "pet claude" }, onSelect: () => switchPet("claude") },
   ])
 
   api.slots.register({
@@ -265,7 +307,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
         return (
           <box paddingX={1} paddingY={1} flexDirection="column" gap={1}>
             <box flexDirection="row" gap={1}>
-              <text fg="#bd93f9"><b>🐱 {petType()}</b></text>
+              <text fg="#bd93f9"><b>{PET_ICONS[petType()] || "🐾"} {petType()}</b></text>
               <text fg={color}>{STATE_ICONS[currentState]} {currentState}</text>
             </box>
             <box flexDirection="column" alignItems="center" minHeight={HL}>
