@@ -167,34 +167,35 @@ const corgiFrames: Record<PetState, string[][]> = {
   ],
 }
 
-const claudeFrames: Record<PetState, string[][]> = {
+const W = 18
+const robotFrames: Record<PetState, string[][]> = {
   idle: [
-    pad(["   \\|/       ","  ( o o )    ","   |   |     ","  _/   \\_    "], 14),
-    pad(["   /|\\       ","  ( o o )    ","   |   |     ","  _/   \\_    "], 14),
+    pad(["     i   i        ","   .───────.      ","   │ O   O │      ","   │  ┌─┐  │      ","   └───┬───┘      ","     ║ ║          ","    ═══════        "], W),
+    pad(["     i   i        ","   .───────.      ","   │ O   O │      ","   │  ┌─┐  │      ","   └───┬───┘      ","     ║ ║          ","    ═══════        "], W),
   ],
   happy: [
-    pad(["   \\|/       ","  ( ^ ^ )    ","   | ♥ |     ","  _/   \\_    "], 14),
-    pad(["   \\|/       ","  ( ^ω^ )    ","   | ♥ |     ","  _/ \\_/ \\_  "], 14),
+    pad(["     i   i        ","   .───────.      ","   │ ^ ♡ ^ │      ","   │  ┌─┐  │      ","   └───┬───┘      ","  beep boop!      ","    ═══════        "], W),
+    pad(["     i   i        ","   .───────.      ","   │ ^ ♡ ^ │      ","   │  ┌─┐  │      ","   └───┬───┘      ","     ♥ ♥          ","    ═══════        "], W),
   ],
   sleeping: [
-    pad(["   \\|/       ","  ( - - )    ","   | z |     ","  _/   \\_    "], 14),
-    pad(["   \\|/       ","  ( - - )    ","   | Z |     ","  _/   \\_    ","    zzz      "], 14),
+    pad(["     i   i        ","   .───────.      ","   │ -   - │      ","   │  zzz   │      ","   └───┬───┘      ","     zzz...       ","    ═══════        "], W),
+    pad(["     i   i        ","   .───────.      ","   │ -   - │      ","   │  ZZZ   │      ","   └───┬───┘      ","     ZZZ...       ","    ═══════        "], W),
   ],
   eating: [
-    pad(["   \\|/       ","  ( o nom )  ","   |   |     ","  _/   \\_    "], 14),
-    pad(["   \\|/       ","  ( nom o )  ","   | ♥ |     ","  _/   \\_    "], 14),
+    pad(["     i   i        ","   .───────.      ","   │ ◉   ◉ │      ","   │  nom   │      ","   └───┬───┘      ","     nom!         ","    ═══════        "], W),
+    pad(["     i   i        ","   .───────.      ","   │ ◉   ◉ │      ","   │  nom   │      ","   └───┬───┘      ","     nom nom      ","    ═══════        "], W),
   ],
   playing: [
-    pad(["   \\|/    *  ","  ( ^ ^ )    ","   | ♥ |     ","  _/ \\_/ \\_  "], 14),
-    pad(["   /|\\       ","  ( ^ ^ )*   ","   | ♥ |     ","  _/   \\_    "], 14),
+    pad(["     i   i        ","   .───────.      ","   │ ω ♡ ω │      ","   │  ┌─┐  │      ","   └───┬───┘      ","  > boop <        ","    ═══════        "], W),
+    pad(["     i   i        ","   .───────.      ","   │ ω ♡ ω │      ","   │  ┌─┐  │      ","   └───┬───┘      ","  > beep <        ","    ═══════        "], W),
   ],
   excited: [
-    pad(["   \\|/       ","  ( O O )    ","   | ! |     ","  _/ \\_/ \\_  "], 14),
-    pad(["   /|\\       ","  ( ω ω )    ","   | ! |     ","  _/ \\_/ \\_  "], 14),
+    pad(["     i   i        ","   .───────.      ","   │ ◉ ♡ ◉ │      ","   │  ┌─┐  │      ","   └───┬───┘      ","  BEEP BOOP!      ","    ═══════        "], W),
+    pad(["     i   i        ","   .───────.      ","   │ ◉ ♡ ◉ │      ","   │  ┌─┐  │      ","   └───┬───┘      ","   !! ♥ !!        ","    ═══════        "], W),
   ],
   sad: [
-    pad(["   \\|/       ","  ( T T )    ","   |   |     ","  _/   \\_    "], 14),
-    pad(["   \\|/       ","  ( T T )    ","   |   |     ","  _/   \\_    ","    ;_;      "], 14),
+    pad(["     i   i        ","   .───────.      ","   │ T   T │      ","   │  err  │      ","   └───┬───┘      ","     ;_;          ","    ═══════        "], W),
+    pad(["     i   i        ","   .───────.      ","   │ T   T │      ","   │  404  │      ","   └───┬───┘      ","    404 :(         ","    ═══════        "], W),
   ],
 }
 
@@ -224,7 +225,7 @@ const PET_ICONS: Record<string, string> = {
   hamster: "🐹",
   ghost: "👻",
   corgi: "🐶",
-  claude: "🔍",
+  robot: "🤖",
 }
 
 const allPetFrames: Record<string, Record<PetState, string[][]>> = {
@@ -233,7 +234,7 @@ const allPetFrames: Record<string, Record<PetState, string[][]>> = {
   hamster: hamFrames,
   ghost: ghostFrames,
   corgi: corgiFrames,
-  claude: claudeFrames,
+  robot: robotFrames,
 }
 
 const PetsPlugin: TuiPlugin = async (api) => {
@@ -269,6 +270,33 @@ const PetsPlugin: TuiPlugin = async (api) => {
   onMount(() => {
     frameInterval = setInterval(() => setFrame(f => f + 1), 500)
     scheduleNextState()
+
+    api.event.on("message.part.delta", () => {
+      overrideState("excited", 3000)
+    })
+
+    api.event.on("session.error", () => {
+      overrideState("sad", 5000)
+    })
+
+    api.event.on("session.idle", () => {
+      if (stateTimeout) clearTimeout(stateTimeout)
+      setState("idle")
+      setFrame(0)
+      scheduleNextState()
+    })
+
+    api.event.on("file.edited", () => {
+      overrideState("eating", 4000)
+    })
+
+    api.event.on("tui.prompt.append", () => {
+      overrideState("happy", 2000)
+    })
+
+    api.event.on("command.executed", () => {
+      overrideState("happy", 3000)
+    })
   })
 
   onCleanup(() => {
@@ -290,7 +318,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
     { title: "Hamster", value: "pet hamster", description: "Hamster", slash: { name: "pet hamster" }, onSelect: () => switchPet("hamster") },
     { title: "Ghost", value: "pet ghost", description: "Ghost", slash: { name: "pet ghost" }, onSelect: () => switchPet("ghost") },
     { title: "Corgi", value: "pet corgi", description: "Corgi", slash: { name: "pet corgi" }, onSelect: () => switchPet("corgi") },
-    { title: "Claude", value: "pet claude", description: "N33DLE", slash: { name: "pet claude" }, onSelect: () => switchPet("claude") },
+    { title: "Robot", value: "pet robot", description: "Robot", slash: { name: "pet robot" }, onSelect: () => switchPet("robot") },
   ])
 
   api.slots.register({
