@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "plugin": [
+    ["./plugins/pets.tsx", {
+      "pet": "dog",
+      "name": "Buddy",
+      "size": "small",
+      "color": "auto",
+      "behavior": {
+        "reactToEvents": true,
+        "showMood": true,
+        "animateIdle": true,
+        "randomPlay": true
+      },
+      "animations": {
+        "fps": 5
+      }
+    }]
+  ],
+  "plugin_enabled": {
+    "opencode-pets": true
+  }
+}

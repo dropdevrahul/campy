@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "theme": "opencode",
+  "plugin": [
+    ["./plugins/pets.tsx", {
+      "name": "Whiskers",
+      "animations": {
+        "fps": 3
+      }
+    }]
+  ]
+}

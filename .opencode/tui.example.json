@@ -1,0 +1,32 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "theme": "opencode",
+  "plugin": [
+    ["./plugins/pets.tsx", {
+      "pet": "corgi",
+      "name": "Peanut",
+      "size": "small",
+      "color": "auto",
+      "position": "sidebar",
+      "behavior": {
+        "reactToEvents": true,
+        "showMood": true,
+        "animateIdle": true,
+        "randomPlay": true
+      },
+      "animations": {
+        "fps": 4,
+        "enableAll": true
+      }
+    }]
+  ],
+  "plugin_enabled": {
+    "opencode-pets": true
+  },
+  "keybinds": {
+    "leader": "ctrl+x"
+  },
+  "scroll_speed": 3,
+  "diff_style": "auto",
+  "mouse": true
+}

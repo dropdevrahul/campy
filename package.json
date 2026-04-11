@@ -1,0 +1,37 @@
+{
+  "name": "opencode-pets",
+  "version": "1.0.0",
+  "description": "Animated terminal pets plugin for OpenCode",
+  "main": ".opencode/plugins/pets.tsx",
+  "scripts": {
+    "dev": "opencode --dev",
+    "test": "echo 'No tests yet'"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "pets",
+    "terminal",
+    "tui",
+    "ascii-art"
+  ],
+  "author": "OpenCode Community",
+  "license": "MIT",
+  "peerDependencies": {
+    "@opentui/solid": "*",
+    "@opencode-ai/plugin": "*",
+    "solid-js": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/opencode-pets"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/opencode-pets/issues"
+  },
+  "homepage": "https://github.com/yourusername/opencode-pets#readme"
+}
