@@ -255,7 +255,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
   const [state, setState] = createSignal<PetState>("idle")
   const [speechBubble, setSpeechBubble] = createSignal("")
 
-  let frameInterval: ReturnType<typeof setInterval> | undefined
+  let frameTimeout: ReturnType<typeof setTimeout> | undefined
   let stateTimeout: ReturnType<typeof setTimeout> | undefined
   let speechTimeout: ReturnType<typeof setTimeout> | undefined
 
@@ -287,8 +287,17 @@ const PetsPlugin: TuiPlugin = async (api) => {
     }, duration)
   }
 
+  const scheduleFrame = () => {
+    const isOdd = frame() % 2 !== 0
+    const delay = isOdd ? 150 : 2000 + Math.random() * 2000
+    frameTimeout = setTimeout(() => {
+      setFrame(f => f + 1)
+      scheduleFrame()
+    }, delay)
+  }
+
   onMount(() => {
-    frameInterval = setInterval(() => setFrame(f => f + 1), 500)
+    scheduleFrame()
     scheduleNextState()
 
     api.event.on("message.part.delta", () => {
@@ -324,7 +333,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
   })
 
   onCleanup(() => {
-    if (frameInterval) clearInterval(frameInterval)
+    if (frameTimeout) clearTimeout(frameTimeout)
     if (stateTimeout) clearTimeout(stateTimeout)
     if (speechTimeout) clearTimeout(speechTimeout)
   })
