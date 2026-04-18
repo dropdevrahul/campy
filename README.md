@@ -4,13 +4,16 @@
 # campy
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![npm version](https://img.shields.io/npm/v/opencode-pets.svg)](https://www.npmjs.com/package/opencode-pets)
 
 Animated terminal pets for OpenCode and Claude Code.
 
-[Features](#features) • [Installation](#installation) • [Slash Commands](#slash-commands) • [Documentation](#documentation)
+[Features](#features) • [Installation](#installation) • [Slash Commands](#slash-commands)
 
 </div>
+
+## Demo
+
+https://github.com/user-attachments/assets/campy.mov
 
 ## Overview
 
@@ -44,7 +47,7 @@ cp -r .opencode/ /path/to/your/project/
 cp -r ghost-pet/ /path/to/your/project/ghost-pet
 
 # Run with the plugin
-claude --plugin-dir ./ghostPet
+claude --plugin-dir ./ghost-pet
 
 # Use slash commands
 /ghost-pet:ghost        # Check on your ghost
@@ -96,15 +99,6 @@ ghost-pet/
 ├── ghost-pet.sh              # State machine + renderer
 └── hooks/                  # Event hooks
 ```
-
-## Documentation
-
-| Document | Description |
-|----------|-------------|
-| [SPEC.md](SPEC.md) | Technical specification |
-| [COMMANDS.md](COMMANDS.md) | Commands & interactions |
-| [QUICKSTART.md](QUICKSTART.md) | Getting started |
-| [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Common issues |
 
 ## License
 
