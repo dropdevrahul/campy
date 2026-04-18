@@ -576,7 +576,6 @@ const PetsPlugin: TuiPlugin = async (api) => {
       const next = STATES[Math.floor(Math.random() * STATES.length)]
       setState(next)
       engine?.setState(next)
-      engine?.resetToState(next)
       scheduleNextState()
     }, delay)
   }
