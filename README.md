@@ -13,7 +13,7 @@ Animated terminal pets for OpenCode and Claude Code.
 
 ## Demo
 
-https://github.com/user-attachments/assets/campy.mov
+[campy.mov](./campy.mov)
 
 ## Overview
 
