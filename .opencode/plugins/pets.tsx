@@ -335,82 +335,7 @@ const catAnim: PetAnimations = {
   ],
 }
 
-const W = 18
 
-const dogAnim: PetAnimations = {
-  states: {
-    idle: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    o__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16), durationRange: [2000, 4000] },
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    -__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16), duration: 150 },
-        ],
-        loop: true,
-      },
-    ],
-    sleeping: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    -__-    )"," (   /\\___/\\   )","  `--'    `--'  ","   zzz      "], 16), durationRange: [2000, 3000] },
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    -__-    )"," (   /\\___/\\   )","  `--'    `--'  ","   ZZZ      "], 16), duration: 1500 },
-        ],
-        loop: true,
-      },
-    ],
-    happy: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   wag wag!  "], 16), durationRange: [1500, 3000] },
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16), duration: 800 },
-        ],
-        loop: true,
-      },
-    ],
-    eating: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    o__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   nom nom  "], 16), duration: 400 },
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   nom!     "], 16), duration: 300 },
-        ],
-        loop: true,
-      },
-    ],
-    playing: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   wag wag!  "], 16), duration: 500 },
-          { frame: pad(["     /\\  /\\   ","    /\\../\\   ","  (  ω__o  )  "," ( /\\___/\\ ) ","  `--'`--'    "], 16), duration: 500 },
-        ],
-        loop: true,
-      },
-    ],
-    excited: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  ","   BORK BORK "], 16), duration: 300 },
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    ω__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16), duration: 300 },
-        ],
-        loop: true,
-      },
-    ],
-    sad: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    T__T    )"," (   /\\___/\\   )","  `--'    `--'  "], 16), durationRange: [4000, 6000] },
-          { frame: pad(["   /\\    /\\   ","  /  \\../  \\  "," (    T__T    )"," (   /\\___/\\   )","  `--'    `--'  ","   ;_;      "], 16), duration: 2000 },
-        ],
-        loop: true,
-      },
-    ],
-  },
-}
 
 const hamAnim: PetAnimations = {
   states: {
@@ -491,9 +416,17 @@ const ghostAnim: PetAnimations = {
   states: {
     idle: [
       {
-        id: "base",
+        id: "body",
+        steps: [{ frame: pad(["   .-.     ","           ","  | O |    ","  '~~~'    "], 12), duration: 5000 }],
+        loop: true,
+      },
+      {
+        id: "eyes",
         steps: [
-          { frame: pad(["   .-.     ","  (o o)    ","  | O |    ","  '~~~'    "], 12), duration: 3000 },
+          { frame: pad(["           ","  (o o)    ","           ","           "], 12), durationRange: [2000, 4000] },
+          { frame: pad(["           ","  (- -)    ","           ","           "], 12), duration: 150 },
+          { frame: pad(["           ","  (· ·)    ","           ","           "], 12), duration: 80 },
+          { frame: pad(["           ","  (- -)    ","           ","           "], 12), duration: 150 },
         ],
         loop: true,
       },
@@ -561,88 +494,23 @@ const ghostAnim: PetAnimations = {
   },
 }
 
-const corgiAnim: PetAnimations = {
-  states: {
-    idle: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   "], 16), durationRange: [2000, 4000] },
-          { frame: pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | -  - |  |","  \\ \\__/  /  / ","   `------'   "], 16), duration: 150 },
-        ],
-        loop: true,
-      },
-    ],
-    sleeping: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | -  - |  |","  \\ \\__/  /  / ","   `------'   ","   zzz      "], 16), durationRange: [2000, 3000] },
-          { frame: pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | -  - |  |","  \\ \\__/  /  / ","   `------'   ","   ZZZ      "], 16), duration: 1500 },
-        ],
-        loop: true,
-      },
-    ],
-    happy: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   ","   happy!    "], 16), durationRange: [1500, 3000] },
-          { frame: pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   ","   yip!      "], 16), duration: 800 },
-        ],
-        loop: true,
-      },
-    ],
-    eating: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   ","   nom nom  "], 16), duration: 400 },
-          { frame: pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   ","   nom!     "], 16), duration: 300 },
-        ],
-        loop: true,
-      },
-    ],
-    playing: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  | \\  / |  |","  \\ \\__/  /  / ","   `------'   ","   yip yip! "], 16), duration: 500 },
-          { frame: pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   ","   bork!    "], 16), duration: 500 },
-        ],
-        loop: true,
-      },
-    ],
-    excited: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   ","   BORK BORK"], 16), duration: 300 },
-          { frame: pad(["  /\\^..^/\\  "," /  \\ ω /  \\ ","|  |  ♥  |  |","  \\ \\__/  /  / ","   `------'   "], 16), duration: 300 },
-        ],
-        loop: true,
-      },
-    ],
-    sad: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | T  T |  |","  \\ \\__/  /  / ","   `------'   "], 16), durationRange: [4000, 6000] },
-          { frame: pad(["  /\\^..^/\\  "," /  \\    /  \\ ","|  | T  T |  |","  \\ \\__/  /  / ","   `------'   ","   ;_;      "], 16), duration: 2000 },
-        ],
-        loop: true,
-      },
-    ],
-  },
-}
+
 
 const robotAnim: PetAnimations = {
   states: {
     idle: [
       {
-        id: "base",
+        id: "body",
+        steps: [{ frame: pad(["    ___     ___  ","                ","   |___/   \\___|" ,"      \\_|_/      "], 18), duration: 5000 }],
+        loop: true,
+      },
+      {
+        id: "eyes",
         steps: [
-          { frame: pad(["    ___     ___  ","   | O |---| O | ","   |___/   \\___|" ,"      \\_|_/      "], W), duration: 3000 },
+          { frame: pad(["                ","   | O |---| O | ","                ","                "], 18), durationRange: [2000, 4000] },
+          { frame: pad(["                ","   | - |---| - | ","                ","                "], 18), duration: 150 },
+          { frame: pad(["                ","   | · |---| · | ","                ","                "], 18), duration: 80 },
+          { frame: pad(["                ","   | - |---| - | ","                ","                "], 18), duration: 150 },
         ],
         loop: true,
       },
@@ -651,8 +519,8 @@ const robotAnim: PetAnimations = {
       {
         id: "base",
         steps: [
-          { frame: pad(["    ___     ___  ","   | - |---| - | ","   |___/   \\___|" ,"      \\_|_/ zzz  "], W), durationRange: [2000, 3000] },
-          { frame: pad(["    ___     ___  ","   | - |---| - | ","   |___/   \\___|" ,"      \\_|_/ ZZZ  "], W), duration: 1500 },
+          { frame: pad(["    ___     ___  ","   | - |---| - | ","   |___/   \\___|" ,"      \\_|_/ zzz  "], 18), durationRange: [2000, 3000] },
+          { frame: pad(["    ___     ___  ","   | - |---| - | ","   |___/   \\___|" ,"      \\_|_/ ZZZ  "], 18), duration: 1500 },
         ],
         loop: true,
       },
@@ -661,8 +529,8 @@ const robotAnim: PetAnimations = {
       {
         id: "base",
         steps: [
-          { frame: pad(["    ___     ___  ","   | ^ |---| ^ | ","   |___/   \\___|" ,"      \\_|_/  ♥   "], W), durationRange: [1500, 3000] },
-          { frame: pad(["    ___     ___  ","   | ^ |---| ^ | ","   |___/   \\___|" ,"      \\_|_/      "], W), duration: 800 },
+          { frame: pad(["    ___     ___  ","   | ^ |---| ^ | ","   |___/   \\___|" ,"      \\_|_/  ♥   "], 18), durationRange: [1500, 3000] },
+          { frame: pad(["    ___     ___  ","   | ^ |---| ^ | ","   |___/   \\___|" ,"      \\_|_/      "], 18), duration: 800 },
         ],
         loop: true,
       },
@@ -671,8 +539,8 @@ const robotAnim: PetAnimations = {
       {
         id: "base",
         steps: [
-          { frame: pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"    nom nom !    "], W), duration: 400 },
-          { frame: pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"     nom !       "], W), duration: 300 },
+          { frame: pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"    nom nom !    "], 18), duration: 400 },
+          { frame: pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"     nom !       "], 18), duration: 300 },
         ],
         loop: true,
       },
@@ -681,8 +549,8 @@ const robotAnim: PetAnimations = {
       {
         id: "base",
         steps: [
-          { frame: pad(["    ___     ___  ","   | ω |---| ω | ","   |___/   \\___|" ,"   > boop <      "], W), duration: 500 },
-          { frame: pad(["    ___     ___  ","   | ω |---| ω | ","   |___/   \\___|" ,"   > beep <      "], W), duration: 500 },
+          { frame: pad(["    ___     ___  ","   | ω |---| ω | ","   |___/   \\___|" ,"   > boop <      "], 18), duration: 500 },
+          { frame: pad(["    ___     ___  ","   | ω |---| ω | ","   |___/   \\___|" ,"   > beep <      "], 18), duration: 500 },
         ],
         loop: true,
       },
@@ -691,8 +559,8 @@ const robotAnim: PetAnimations = {
       {
         id: "base",
         steps: [
-          { frame: pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"   !! ♥ !!       "], W), duration: 300 },
-          { frame: pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"   BEEP BOOP!    "], W), duration: 300 },
+          { frame: pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"   !! ♥ !!       "], 18), duration: 300 },
+          { frame: pad(["    ___     ___  ","   | ◉ |---| ◉ | ","   |___/   \\___|" ,"   BEEP BOOP!    "], 18), duration: 300 },
         ],
         loop: true,
       },
@@ -701,8 +569,8 @@ const robotAnim: PetAnimations = {
       {
         id: "base",
         steps: [
-          { frame: pad(["    ___     ___  ","   | T |---| T | ","   |___/   \\___|" ,"      ;_;        "], W), durationRange: [4000, 6000] },
-          { frame: pad(["    ___     ___  ","   | T |---| T | ","   |___/   \\___|" ,"     404 :(       "], W), duration: 2000 },
+          { frame: pad(["    ___     ___  ","   | T |---| T | ","   |___/   \\___|" ,"      ;_;        "], 18), durationRange: [4000, 6000] },
+          { frame: pad(["    ___     ___  ","   | T |---| T | ","   |___/   \\___|" ,"     404 :(       "], 18), duration: 2000 },
         ],
         loop: true,
       },
@@ -734,10 +602,8 @@ const STATE_ICONS: Record<PetState, string> = {
 
 const PET_ICONS: Record<string, string> = {
   cat: "🐱",
-  dog: "🐶",
   hamster: "🐹",
   ghost: "👻",
-  corgi: "🐶",
   robot: "🤖",
 }
 
@@ -747,11 +613,56 @@ const IDLE_PHRASES = [
   "Looks good!",
   "Can I help?",
   "Watching you code...",
-  "Beep boop!",
   "I'm here!",
   "Keep going!",
   "What's next?",
 ]
+
+const PET_GREETINGS: Record<string, string> = {
+  cat: "Meow! I'm watching you~",
+  hamster: "Squeak! Let's get rolling!",
+  ghost: "Boo! Did I scare you?",
+  robot: "Beep boop! Systems online.",
+}
+
+const PET_PERSONALITY: Record<string, Record<PetState, string[]>> = {
+  cat: {
+    idle: ["Meow~", "Purr...", "*stretches*", "Watching you...", "*yawn*"],
+    happy: ["Purrrr!", "Meow!", "*happy tail*", "Nya~"],
+    sleeping: ["Zzz...", "*curled up*", "Mrrr...", "*dreams of fish*"],
+    eating: ["Nom nom!", "*munch*", "Tasty!", "*licks lips*"],
+    playing: ["Meow meow!", "*pounces*", "Catch this!", "*bats at cursor*"],
+    excited: ["NYA!!", "*zoomies*", "Mrow!!", "*tail flicking*"],
+    sad: ["*mew*", "Meow ;_;", "*curls up*", "*quiet meow*"],
+  },
+  hamster: {
+    idle: ["*sniff sniff*", "Squeak!", "*grooms*", "*looks around*"],
+    happy: ["Squeak squeak!", "*happy wiggle*", "Wee!", "*popcorns*"],
+    sleeping: ["*tiny snores*", "Zzz...", "*curled in fluff*", "*twitches nose*"],
+    eating: ["Nom nom!", "*stuff cheeks*", "*mumble munch*", "Yummy seed!"],
+    playing: ["*spins wheel*", "Wheee!", "Squeak!", "*zoom zoom*"],
+    excited: ["SQUEAK!!", "*zoomies*", "*popcorns wildly*", "EEEP!"],
+    sad: ["*tiny sniffle*", "Squeak ;_;", "*hides in fluff*", "...squeak"],
+  },
+  ghost: {
+    idle: ["Boo~", "*floats gently*", "Wooo...", "*fades in*"],
+    happy: ["Boo! :D", "*happily haunts*", "Wheee~", "*sparkles*"],
+    sleeping: ["Zzzz...", "*quiet wooo*", "*floats in dreams*", "zzzOOOoo"],
+    eating: ["*inhales food*", "Nom~", "Spooooky snack!", "*absorbs nom*"],
+    playing: ["*phase shift!*", "Boo loop!", "Wooo~", "*floats excitedly*"],
+    excited: ["BOO!!", "*poltergeist*", "WAAAAH!", "*intense haunting*"],
+    sad: ["*fades a little*", "...boo", "*transparent tears*", "Woo ;_;"],
+  },
+  robot: {
+    idle: ["*beep*", "Standby mode.", "Awaiting input...", "*whirrs*"],
+    happy: ["Command: SMILE", ":) executed!", "Joy.dll loaded!", "*happy whirr*"],
+    sleeping: ["Sleep mode active", "*disk spins down*", "Zzz... *buzz*", "Hibernate.exe"],
+    eating: ["Ingesting data...", "Fuel acquired!", "Nom.exe running", "*processes food*"],
+    playing: ["Game.exe started!", "Play mode: ON", "*beep boop*", "Entertained!"],
+    excited: ["BEEP BOOP!", "!!! OVERFLOW !!!", "Excitement > 9000", "*sparks fly*"],
+    sad: ["Error: sad.found", "404: Mood not found", ";_;.exe", "*sad beep*"],
+  },
+}
 
 const PetsPlugin: TuiPlugin = async (api) => {
   const [sprite, setSprite] = createSignal<string[]>(catFrames.idle[0])
@@ -767,13 +678,16 @@ const PetsPlugin: TuiPlugin = async (api) => {
   const getCurrentAnimations = (): PetAnimations => {
     const anims: Record<string, PetAnimations> = {
       cat: catAnim,
-      dog: dogAnim,
       hamster: hamAnim,
       ghost: ghostAnim,
-      corgi: corgiAnim,
       robot: robotAnim,
     }
     return anims[petType()] || catAnim
+  }
+
+  const getPersonalityMessage = (s: PetState): string => {
+    const phrases = PET_PERSONALITY[petType()]?.[s] ?? IDLE_PHRASES
+    return phrases[Math.floor(Math.random() * phrases.length)]
   }
 
   const scheduleNextState = () => {
@@ -782,6 +696,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
       const next = STATES[Math.floor(Math.random() * STATES.length)]
       setState(next)
       engine?.setState(next)
+      showSpeech(getPersonalityMessage(next), 4000)
       scheduleNextState()
     }, delay)
   }
@@ -796,7 +711,8 @@ const PetsPlugin: TuiPlugin = async (api) => {
     if (stateTimeout) clearTimeout(stateTimeout)
     setState(s)
     engine?.setState(s)
-    if (speech) showSpeech(speech, duration)
+    const msg = speech ?? getPersonalityMessage(s)
+    showSpeech(msg, duration)
     stateTimeout = setTimeout(() => {
       setState("idle")
       engine?.setState("idle")
@@ -811,6 +727,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
       { get: sprite, set: setSprite }
     )
     engine.resetToState("idle")
+    showSpeech(PET_GREETINGS[petType()] ?? "Hi!", 5000)
     scheduleNextState()
 
     api.event.on("message.part.delta", () => {
@@ -825,7 +742,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
       if (stateTimeout) clearTimeout(stateTimeout)
       setState("idle")
       engine?.resetToState("idle")
-      showSpeech(IDLE_PHRASES[Math.floor(Math.random() * IDLE_PHRASES.length)], 4000)
+      showSpeech(getPersonalityMessage("idle"), 4000)
       scheduleNextState()
     })
 
@@ -859,6 +776,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
     engine?.destroy()
     engine = new AnimationEngine(getCurrentAnimations(), () => {}, { get: sprite, set: setSprite })
     engine.resetToState("idle")
+    showSpeech(PET_GREETINGS[t] ?? "Hi!", 5000)
     api.ui.toast({ message: t + "!", variant: "success" })
   }
 
@@ -867,10 +785,8 @@ const PetsPlugin: TuiPlugin = async (api) => {
     { title: "Play", value: "pet play", description: "Play", slash: { name: "pet play" }, onSelect: play },
     { title: "Pet", value: "pet pet", description: "Pet", slash: { name: "pet pet" }, onSelect: petIt },
     { title: "Cat", value: "pet cat", description: "Cat", slash: { name: "pet cat" }, onSelect: () => switchPet("cat") },
-    { title: "Dog", value: "pet dog", description: "Dog", slash: { name: "pet dog" }, onSelect: () => switchPet("dog") },
     { title: "Hamster", value: "pet hamster", description: "Hamster", slash: { name: "pet hamster" }, onSelect: () => switchPet("hamster") },
     { title: "Ghost", value: "pet ghost", description: "Ghost", slash: { name: "pet ghost" }, onSelect: () => switchPet("ghost") },
-    { title: "Corgi", value: "pet corgi", description: "Corgi", slash: { name: "pet corgi" }, onSelect: () => switchPet("corgi") },
     { title: "Robot", value: "pet robot", description: "Robot", slash: { name: "pet robot" }, onSelect: () => switchPet("robot") },
   ])
 
@@ -901,7 +817,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
               {currentSprite.map((l: string, i: number) => <text key={i} fg={color}>{l}</text>)}
             </box>
             <text fg="#f8f8f2">Happy: {bar} {happiness()}%</text>
-            <text fg="#6272a4">/pet feed /pet play /pet dog</text>
+            <text fg="#6272a4">/pet feed /pet play /pet ghost</text>
           </box>
         )
       },
