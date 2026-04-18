@@ -249,6 +249,105 @@ const catFrames: Record<PetState, string[][]> = {
   ],
 }
 
+const catAnim: PetAnimations = {
+  states: {
+    idle: [
+      {
+        id: "body",
+        steps: [{ frame: pad(["  /\\_____/\\  ", " /          \\ ", "(    ^ ==  )", " \\  '-'  /  ", " (__)  (__) "], 14), duration: 5000 }],
+        loop: true,
+      },
+      {
+        id: "eyes",
+        steps: [
+          { frame: pad(["             ", " /  o   o  \\ ", "             ", "             ", "             "], 14), durationRange: [2000, 4000] },
+          { frame: pad(["             ", " /  -   -  \\ ", "             ", "             ", "             "], 14), duration: 150 },
+          { frame: pad(["             ", " /  ·   ·  \\ ", "             ", "             ", "             "], 14), duration: 80 },
+          { frame: pad(["             ", " /  -   -  \\ ", "             ", "             ", "             "], 14), duration: 150 },
+        ],
+        loop: true,
+      },
+    ],
+    happy: [
+      {
+        id: "base",
+        steps: [
+          { frame: pad(["  /\\_____/\\  ", " /  ^   ^  \\ ", "(  == ω ==  )", " \\  '-'  /  ", " (__)  (__) "], 14), durationRange: [1500, 3000] },
+          { frame: pad(["  /\\_____/\\  ", " /  ^   ^  \\ ", "(  == ω ==  )", " \\  '-'  /  ", "  | ♥ |    ", " (__) (__)  "], 14), duration: 800 },
+        ],
+        loop: true,
+      },
+    ],
+    sleeping: [
+      {
+        id: "base",
+        steps: [
+          { frame: pad(["  /\\_____/\\  ", " /  -   -  \\ ", "(  == z z  )", " \\  '-'  /  ", " (__)  (__) "], 14), durationRange: [2000, 3000] },
+          { frame: pad(["  /\\_____/\\  ", " /  -   -  \\ ", "(  == Z z  )", " \\  '-'  /  ", " (__)  (__) "], 14), duration: 1500 },
+        ],
+        loop: true,
+      },
+    ],
+    eating: [
+      {
+        id: "base",
+        steps: [
+          { frame: pad(["  /\\_____/\\  ", " /  o   o  \\ ", "(  == ω ==  )", " \\  nom /  ", " (__)  (__) "], 14), duration: 400 },
+          { frame: pad(["  /\\_____/\\  ", " /  ^   ^  \\ ", "(  == ω ==  )", " \\  nom /  ", " (__)  (__) "], 14), duration: 300 },
+        ],
+        loop: true,
+      },
+    ],
+    playing: [
+      {
+        id: "base",
+        steps: [
+          { frame: pad(["    /\\_____/\\ ", "   /  ^   ^  \\", " ( == ω ==  ) ", "  \\  '-'  /  ", "  (__)  (__) "], 14), duration: 500 },
+          { frame: pad(["  /\\_____/\\  ", " /  ^   ^  \\ ", "(  == ω ==  )", " \\  '-'  /  ", " (__)  (__) "], 14), duration: 500 },
+        ],
+        loop: true,
+      },
+    ],
+    excited: [
+      {
+        id: "base",
+        steps: [
+          { frame: pad(["  /\\_____/\\  ", " /  ^   ^  \\ ", "(  == ω ==  )", " \\  '-'  /  ", "  | ♥ |    ", " (__) (__)  "], 14), duration: 300 },
+          { frame: pad(["  /\\_____/\\  ", " /  ^   ^  \\ ", "(  == ω==  )", " \\  '-'  /  ", " (__)  (__) "], 14), duration: 300 },
+        ],
+        loop: true,
+      },
+    ],
+    sad: [
+      {
+        id: "base",
+        steps: [
+          { frame: pad(["  /\\_____/\\  ", " /  -   -  \\ ", "(  == T T  )", " \\  '-'  /  ", " (__)  (__) "], 14), durationRange: [4000, 6000] },
+          { frame: pad(["  /\\_____/\\  ", " /  -   -  \\ ", "(  == T T  )", " \\  '-'  /  ", " (__)  (__) ", "   ;_;     "], 14), duration: 2000 },
+        ],
+        loop: true,
+      },
+    ],
+  },
+  transitions: [
+    {
+      from: "idle",
+      to: "happy",
+      steps: [
+        { frame: pad(["  /\\_____/\\  ", " /  O   O  \\ ", "(  == ! ==  )", " \\  '-'  /  ", " (__)  (__) "], 14), duration: 200 },
+        { frame: pad(["  /\\_____/\\  ", " /  ^   ^  \\ ", "(  == ω ==  )", " \\  '-'  /  ", " (__)  (__) "], 14), duration: 300 },
+      ],
+    },
+    {
+      from: "happy",
+      to: "sad",
+      steps: [
+        { frame: pad(["  /\\_____/\\  ", " /  -   -  \\ ", "(  == ... == )", " \\  '-'  /  ", " (__)  (__) "], 14), duration: 400 },
+      ],
+    },
+  ],
+}
+
 const dogFrames: Record<PetState, string[][]> = {
   idle: [
     pad(["   /\\    /\\   ","  /  \\../  \\  "," (    o__o    )"," (   /\\___/\\   )","  `--'    `--'  "], 16),
@@ -455,22 +554,29 @@ const IDLE_PHRASES = [
 ]
 
 const PetsPlugin: TuiPlugin = async (api) => {
-  const [frame, setFrame] = createSignal(0)
+  const [sprite, setSprite] = createSignal<string[]>(catFrames.idle[0])
   const [happiness, setHappiness] = createSignal(80)
   const [petType, setPetType] = createSignal("cat")
   const [state, setState] = createSignal<PetState>("idle")
   const [speechBubble, setSpeechBubble] = createSignal("")
 
-  let frameTimeout: ReturnType<typeof setTimeout> | undefined
+  let engine: AnimationEngine | undefined
   let stateTimeout: ReturnType<typeof setTimeout> | undefined
   let speechTimeout: ReturnType<typeof setTimeout> | undefined
+
+  const getCurrentAnimations = (): PetAnimations => {
+    const pt = petType()
+    if (pt === "cat") return catAnim
+    return convertLegacyFrames(allPetFrames[pt] || catFrames)
+  }
 
   const scheduleNextState = () => {
     const delay = 10000 + Math.random() * 20000
     stateTimeout = setTimeout(() => {
       const next = STATES[Math.floor(Math.random() * STATES.length)]
       setState(next)
-      setFrame(0)
+      engine?.setState(next)
+      engine?.resetToState(next)
       scheduleNextState()
     }, delay)
   }
@@ -484,26 +590,22 @@ const PetsPlugin: TuiPlugin = async (api) => {
   const overrideState = (s: PetState, duration: number, speech?: string) => {
     if (stateTimeout) clearTimeout(stateTimeout)
     setState(s)
-    setFrame(0)
+    engine?.setState(s)
     if (speech) showSpeech(speech, duration)
     stateTimeout = setTimeout(() => {
       setState("idle")
-      setFrame(0)
+      engine?.setState("idle")
       scheduleNextState()
     }, duration)
   }
 
-  const scheduleFrame = () => {
-    const isOdd = frame() % 2 !== 0
-    const delay = isOdd ? 150 : 2000 + Math.random() * 2000
-    frameTimeout = setTimeout(() => {
-      setFrame(f => f + 1)
-      scheduleFrame()
-    }, delay)
-  }
-
   onMount(() => {
-    scheduleFrame()
+    engine = new AnimationEngine(
+      getCurrentAnimations(),
+      () => {},
+      { get: sprite, set: setSprite }
+    )
+    engine.resetToState("idle")
     scheduleNextState()
 
     api.event.on("message.part.delta", () => {
@@ -517,7 +619,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
     api.event.on("session.idle", () => {
       if (stateTimeout) clearTimeout(stateTimeout)
       setState("idle")
-      setFrame(0)
+      engine?.resetToState("idle")
       showSpeech(IDLE_PHRASES[Math.floor(Math.random() * IDLE_PHRASES.length)], 4000)
       scheduleNextState()
     })
@@ -539,7 +641,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
   })
 
   onCleanup(() => {
-    if (frameTimeout) clearTimeout(frameTimeout)
+    engine?.destroy()
     if (stateTimeout) clearTimeout(stateTimeout)
     if (speechTimeout) clearTimeout(speechTimeout)
   })
@@ -547,7 +649,13 @@ const PetsPlugin: TuiPlugin = async (api) => {
   const feed = () => { setHappiness(h => Math.min(100, h + 15)); overrideState("eating", 5000); api.ui.toast({ message: "Fed!", variant: "success" }) }
   const play = () => { setHappiness(h => Math.min(100, h + 20)); overrideState("playing", 5000); api.ui.toast({ message: "Played!", variant: "success" }) }
   const petIt = () => { setHappiness(h => Math.min(100, h + 10)); overrideState("happy", 3000); api.ui.toast({ message: "Pet!", variant: "success" }) }
-  const switchPet = (t: string) => { setPetType(t); setHappiness(80); setState("idle"); setFrame(0); api.ui.toast({ message: t + "!", variant: "success" }) }
+  const switchPet = (t: string) => {
+    setPetType(t); setHappiness(80); setState("idle")
+    engine?.destroy()
+    engine = new AnimationEngine(getCurrentAnimations(), () => {}, { get: sprite, set: setSprite })
+    engine.resetToState("idle")
+    api.ui.toast({ message: t + "!", variant: "success" })
+  }
 
   api.command.register(() => [
     { title: "Feed", value: "pet feed", description: "Feed", slash: { name: "pet feed" }, onSelect: feed },
@@ -565,11 +673,8 @@ const PetsPlugin: TuiPlugin = async (api) => {
     order: 350,
     slots: {
       sidebar_content() {
-        const petFrames = allPetFrames[petType()] || catFrames
+        const currentSprite = sprite()
         const currentState = state()
-        const stateFrames = petFrames[currentState] || petFrames.idle
-        const idx = frame() % stateFrames.length
-        const sprite = stateFrames[idx] || petFrames.idle[0]
         const color = STATE_COLORS[currentState]
         const bar = "█".repeat(Math.floor(happiness() / 10)) + "░".repeat(10 - Math.floor(happiness() / 10))
         const bubble = speechBubble()
@@ -588,7 +693,7 @@ const PetsPlugin: TuiPlugin = async (api) => {
               </box>
             ) : null}
             <box flexDirection="column" alignItems="center" minHeight={HL}>
-              {sprite.map((l: string, i: number) => <text key={i} fg={color}>{l}</text>)}
+              {currentSprite.map((l: string, i: number) => <text key={i} fg={color}>{l}</text>)}
             </box>
             <text fg="#f8f8f2">Happy: {bar} {happiness()}%</text>
             <text fg="#6272a4">/pet feed /pet play /pet dog</text>
