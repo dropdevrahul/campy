@@ -4,8 +4,8 @@ Bring ASCII pets to your terminal sidebar! Campy adds animated pets that cycle t
 
 ## Features
 
-- **6 Pet Types**: Cat, Dog, Hamster, Corgi, Ghost, and Robot
-- **7 Animation States**: idle, happy, sleeping, eating, playing, excited, sad — each with 2 frames
+- **4 Pet Types**: Cat, Hamster, Ghost, and Robot
+- **7 Animation States**: idle, happy, sleeping, eating, playing, excited, sad — with multi-step animations and blinking
 - **Speech Bubbles**: All pets show contextual messages like Clippy — "Edited app.tsx!", "Thinking...", "Need a hand?"
 - **Happiness Counter**: Feed, play with, or pet your companion to raise happiness
 - **Event Reactions**: Pets react to tool use, file edits, errors, and idle states
@@ -86,22 +86,18 @@ Type any of these in the OpenCode prompt:
 | `/pet play` | Play with your pet (+20 happiness) |
 | `/pet pet` | Pet your pet (+10 happiness) |
 | `/pet cat` | Switch to cat |
-| `/pet dog` | Switch to dog |
 | `/pet hamster` | Switch to hamster |
 | `/pet ghost` | Switch to ghost |
-| `/pet corgi` | Switch to corgi |
 | `/pet robot` | Switch to robot |
 
 ## Available Pets
 
-| Pet | States | Emoji Icon | Speech Bubble |
-|-----|--------|------------|---------------|
-| Cat | 7 states, 2 frames each | 🐱 | Yes |
-| Dog | 7 states, 2 frames each | 🐶 | Yes |
-| Hamster | 7 states, 2 frames each | 🐹 | Yes |
-| Corgi | 7 states, 2 frames each | 🐶 | Yes |
-| Ghost | 7 states, 2 frames each | 👻 | Yes |
-| Robot | 7 states, 2 frames each | 🤖 | Yes |
+| Pet | States | Blinking | Emoji | Speech |
+|-----|--------|----------|-------|--------|
+| Cat | 7 states | Yes (layered eyes) | 🐱 | Yes |
+| Hamster | 7 states | Yes (frame-step) | 🐹 | Yes |
+| Ghost | 7 states | Yes (layered eyes) | 👻 | Yes |
+| Robot | 7 states | Yes (layered eyes) | 🤖 | Yes |
 
 ## Speech Bubbles
 
@@ -123,7 +119,7 @@ Idle phrases: "Need a hand?", "Looks good!", "Can I help?", "Watching you code..
 ```
 .opencode/
 ├── plugins/
-│   └── pets.tsx              # Main OpenCode plugin (all 6 pets)
+│   └── pets.tsx              # Main OpenCode plugin (4 pets)
 └── tui.json                  # Plugin configuration
 
 ghost-pet/
