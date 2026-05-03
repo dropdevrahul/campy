@@ -5,7 +5,9 @@
   "main": ".opencode/plugins/pets.tsx",
   "scripts": {
     "dev": "opencode --dev",
-    "test": "echo 'No tests yet'"
+    "test": "echo 'No tests yet'",
+    "generate:ascii": "node scripts/gif-to-ascii.js",
+    "extract:frames": "node scripts/extract-frames-to-json.js"
   },
   "keywords": [
     "opencode",
@@ -18,12 +20,15 @@
   "author": "OpenCode Community",
   "license": "MIT",
   "peerDependencies": {
-    "@opentui/solid": "*",
     "@opencode-ai/plugin": "*",
+    "@opentui/solid": "*",
     "solid-js": "*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "gifuct-js": "^2.1.2",
+    "omggif": "^1.0.10",
+    "sharp": "^0.34.5",
     "typescript": "^5.0.0"
   },
   "repository": {
