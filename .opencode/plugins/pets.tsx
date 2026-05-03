@@ -797,7 +797,6 @@ const PetsPlugin: TuiPlugin = async (api) => {
         const currentSprite = sprite()
         const currentState = state()
         const color = STATE_COLORS[currentState]
-        const bar = "█".repeat(Math.floor(happiness() / 10)) + "░".repeat(10 - Math.floor(happiness() / 10))
         const bubble = speechBubble()
         return (
           <box paddingX={1} paddingY={1} flexDirection="column" gap={1}>
@@ -816,8 +815,6 @@ const PetsPlugin: TuiPlugin = async (api) => {
             <box flexDirection="column" alignItems="center" minHeight={HL}>
               {currentSprite.map((l: string, i: number) => <text key={i} fg={color}>{l}</text>)}
             </box>
-            <text fg="#f8f8f2">Happy: {bar} {happiness()}%</text>
-            <text fg="#6272a4">/pet feed /pet play /pet ghost</text>
           </box>
         )
       },
