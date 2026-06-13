@@ -6,51 +6,14 @@ import catJson from "../../assets/ascii-frames/cat.json"
 import ghostJson from "../../assets/ascii-frames/ghost.json"
 import robotJson from "../../assets/ascii-frames/robot.json"
 
-type FrameData = { frames: string[][]; durations: number[] }
+import type { FrameData } from "./lib/types"
+import { GifEngine } from "./lib/gif-engine"
+import { PET_COLORS } from "./config"
 
 const petData: Record<string, FrameData> = {
   cat: catJson,
   ghost: ghostJson,
   robot: robotJson,
-}
-
-class GifEngine {
-  private idx = 0
-  private timer: ReturnType<typeof setTimeout> | null = null
-  private destroyed = false
-  private signal: { get: () => string[]; set: (v: string[]) => void }
-  private frames: FrameData
-
-  constructor(frames: FrameData, signal: { get: () => string[]; set: (v: string[]) => void }) {
-    this.frames = frames
-    this.signal = signal
-  }
-
-  start(): void {
-    if (this.destroyed || this.frames.frames.length === 0) return
-    this.idx = 0
-    this.schedule()
-  }
-
-  private schedule(): void {
-    if (this.destroyed) return
-    this.signal.set(this.frames.frames[this.idx])
-    this.timer = setTimeout(() => {
-      this.idx = (this.idx + 1) % this.frames.frames.length
-      this.schedule()
-    }, this.frames.durations[this.idx] || 200)
-  }
-
-  destroy(): void {
-    this.destroyed = true
-    if (this.timer) { clearTimeout(this.timer); this.timer = null }
-  }
-}
-
-const PET_COLORS: Record<string, string> = {
-  cat: "#bd93f9",
-  ghost: "#f1fa8c",
-  robot: "#50fa7b",
 }
 
 const GifPetsPlugin: TuiPlugin = async (api) => {
