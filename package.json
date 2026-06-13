@@ -1,11 +1,30 @@
 {
-  "name": "opencode-pets",
+  "name": "campy",
   "version": "1.0.0",
-  "description": "Animated terminal pets plugin for OpenCode",
+  "description": "Animated terminal pets for CLI coding agents (Claude Code, OpenCode, Pi, Gemini CLI, Codex CLI, Cursor CLI)",
   "main": ".opencode/plugins/pets.tsx",
+  "bin": {
+    "campy": "cli/campy.ts"
+  },
+  "files": [
+    "core",
+    "cli",
+    "adapters",
+    ".claude-plugin",
+    "assets/ascii-frames",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./cli/campy.ts",
+    "./core": "./core/index.ts",
+    "./pi": "./adapters/pi/index.ts",
+    "./mcp": "./adapters/mcp/server.ts"
+  },
   "scripts": {
+    "campy": "bun cli/campy.ts",
     "dev": "opencode --dev",
-    "test": "echo 'No tests yet'",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "generate:ascii": "node scripts/gif-to-ascii.js",
     "extract:frames": "node scripts/extract-frames-to-json.js"
   },

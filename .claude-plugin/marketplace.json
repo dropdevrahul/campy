@@ -1,0 +1,11 @@
+{
+  "name": "campy",
+  "owner": { "name": "dropdevrahul" },
+  "plugins": [
+    {
+      "name": "campy",
+      "source": "./adapters/claude-code",
+      "description": "Animated terminal pet that reacts to your coding (hooks + statusline + slash commands)"
+    }
+  ]
+}
