@@ -29,14 +29,22 @@
     "extract:frames": "node scripts/extract-frames-to-json.js"
   },
   "keywords": [
+    "campy",
+    "cli",
+    "claude-code",
     "opencode",
-    "plugin",
+    "pi",
+    "gemini",
+    "codex",
+    "cursor",
+    "aider",
+    "mcp",
     "pets",
     "terminal",
     "tui",
     "ascii-art"
   ],
-  "author": "OpenCode Community",
+  "author": "dropdevrahul",
   "license": "MIT",
   "peerDependencies": {
     "@opencode-ai/plugin": "*",
@@ -52,10 +60,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/opencode-pets"
+    "url": "https://github.com/dropdevrahul/campy"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/opencode-pets/issues"
+    "url": "https://github.com/dropdevrahul/campy/issues"
   },
-  "homepage": "https://github.com/yourusername/opencode-pets#readme"
+  "homepage": "https://github.com/dropdevrahul/campy#readme"
 }

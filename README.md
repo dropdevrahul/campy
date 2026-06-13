@@ -5,9 +5,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-Animated terminal pets for OpenCode and Claude Code.
+Animated terminal pets for CLI coding agents — Claude Code, OpenCode, Pi, Gemini CLI, Codex CLI, Cursor CLI, Aider.
 
-[Features](#features) • [Installation](#installation) • [Slash Commands](#slash-commands)
+[Features](#features) • [Installation](#installation) • [Per-agent setup](#per-agent-setup) • [Slash Commands](#slash-commands)
 
 </div>
 
@@ -26,54 +26,94 @@ campy brings delightful ASCII pets to your terminal sidebar. Pets animate throug
 - **Speech Bubbles**: Context-aware messages ("Edited file!", "Thinking...", "Need a hand?")
 - **Happiness System**: Feed, play, or pet your companion to increase happiness
 - **Event Reactions**: Automatic responses to tool use, file edits, errors, and idle states
-- **Slash Commands**: `/pet feed`, `/pet play`, `/pet robot`, and more
-- **Claude Code Support**: Standalone ghost-pet plugin for Claude Code with hooks
+- **Multi-agent**: One CLI + per-agent adapters for Claude Code, OpenCode, Pi, Gemini CLI, Codex CLI, Cursor CLI, and Aider
+- **MCP server**: One stdio server unlocks Gemini / Codex / Cursor at once
 
 ## Installation
 
-### OpenCode
+> **Prerequisite:** [bun](https://bun.sh) (`curl -fsSL https://bun.sh/install | bash`). The CLI is a single TypeScript file with a `#!/usr/bin/env bun` shebang — no build step.
+
+campy isn't on npm yet. Pick one of these:
+
+### Option 1 — install straight from GitHub (recommended)
 
 ```bash
-# Copy the .opencode/ directory into your project
-cp -r .opencode/ /path/to/your/project/
+# via bun
+bun add -g github:dropdevrahul/campy
 
-# Restart OpenCode—the pet appears in the sidebar
+# or via npm
+npm install -g github:dropdevrahul/campy
 ```
 
-### Claude Code
+This registers `campy` on your `$PATH`. Verify:
 
 ```bash
-# Copy the ghost-pet/ directory
-cp -r ghost-pet/ /path/to/your/project/ghost-pet
-
-# Run with the plugin
-claude --plugin-dir ./ghost-pet
-
-# Use slash commands
-/ghost-pet:ghost        # Check on your ghost
-/ghost-pet:ghost-feed   # Feed (+15 happiness)
-/ghost-pet:ghost-play   # Play (+20 happiness)
-/ghost-pet:ghost-pet   # Pet (+10 happiness)
+campy status
 ```
 
-The ghost automatically reacts:
-- Successful tool use → ghost gets happy
-- Tool failure → ghost gets sad
+### Option 2 — clone and symlink
+
+```bash
+git clone https://github.com/dropdevrahul/campy.git ~/work/campy
+cd ~/work/campy && bun install
+chmod +x cli/campy.ts
+ln -s "$PWD/cli/campy.ts" ~/.bun/bin/campy   # or any dir on $PATH
+```
+
+### Auto-detect & wire every agent you have installed
+
+```bash
+campy setup
+```
+
+This detects which agents are installed on your machine (`~/.claude`, `~/.gemini`, `~/.codex`, `~/.cursor`, `~/.pi`, `.opencode/`, `.aider.conf.yml`) and wires each natively. Or install for one agent:
+
+```bash
+campy install claude-code   # | opencode | pi | gemini | codex | cursor | aider
+```
+
+### Render the pet
+
+```bash
+campy watch     # run inline in any terminal
+campy attach    # auto-split a side pane (tmux / zellij / wezterm / kitty)
+```
+
+## Per-agent setup
+
+| Agent       | Surface                         | Install                         |
+|-------------|---------------------------------|---------------------------------|
+| Claude Code | statusline + hooks              | `campy install claude-code`     |
+| OpenCode    | native sidebar widget           | `campy install opencode`        |
+| Pi          | native sidebar widget           | `campy install pi`              |
+| Gemini CLI  | MCP tools (inline ASCII card)   | `campy install gemini`          |
+| Codex CLI   | MCP tools (inline ASCII card)   | `campy install codex`           |
+| Cursor CLI  | MCP tools (inline ASCII card)   | `campy install cursor`          |
+| Aider       | `.git/hooks/post-commit`        | `campy install aider`           |
+
+For agents with no built-in render surface, run `campy attach` in a side pane.
+
+### Token usage
+
+The Claude Code adapter is **zero-token** for normal operation. Hooks and the statusline are bash scripts run outside the model. Slash commands (`/campy:feed`, etc.) cost a small prompt when *you* invoke them.
 
 ## Slash Commands
 
-| Command | Effect |
-|---------|--------|
-| `/pet feed` | Feed your pet (+15 happiness) |
-| `/pet play` | Play with your pet (+20 happiness) |
-| `/pet pet` | Pet your pet (+10 happiness) |
-| `/pet sleep` | Put pet to sleep |
-| `/pet wake` | Wake pet |
-| `/pet status` | Show mood & happiness |
-| `/pet cat` | Switch to cat |
-| `/pet hamster` | Switch to hamster |
-| `/pet ghost` | Switch to ghost |
-| `/pet robot` | Switch to robot |
+The slash-command prefix depends on the host:
+
+- **OpenCode / Pi**: `/pet feed`, `/pet play`, `/pet robot`, …
+- **Claude Code**: `/campy:feed`, `/campy:play`, `/campy:pet`, `/campy:switch <pet>`
+- **MCP agents** (Gemini / Codex / Cursor): call the tools `campy_feed`, `campy_play`, `campy_pet`, `campy_switch`, `campy_status`
+
+| Command       | Effect                          |
+|---------------|---------------------------------|
+| `feed`        | Feed your pet (+15 happiness)   |
+| `play`        | Play with your pet (+20 happiness) |
+| `pet`         | Pet your pet (+10 happiness)    |
+| `sleep`       | Put pet to sleep                |
+| `wake`        | Wake pet                        |
+| `status`      | Show mood & happiness           |
+| `switch <pet>` | `cat` \| `hamster` \| `ghost` \| `robot` |
 
 ## Available Pets
 
@@ -87,18 +127,19 @@ The ghost automatically reacts:
 ## File Structure
 
 ```
-.opencode/
-├── plugins/
-│   └── pets.tsx              # Main OpenCode plugin
-└── tui.json                  # Plugin configuration
-
-ghost-pet/
-├── .claude-plugin/
-│   └── plugin.json            # Claude Code manifest
-├── commands/                  # Slash commands
-├── ghost-pet.sh              # State machine + renderer
-└── hooks/                  # Event hooks
+core/             # portable pet logic (animation, store, runtime, render)
+cli/campy.ts      # the campy binary (bun)
+adapters/
+├── claude-code/  # hooks + statusline + slash commands
+├── pi/           # in-process TUI widget
+├── mcp/          # stdio MCP server (Gemini / Codex / Cursor)
+└── gemini/       # gemini-extension.json + GEMINI.md
+.opencode/        # OpenCode plugins (re-export from core/)
+.claude-plugin/   # Claude Code marketplace manifest
+ghost-pet/        # legacy standalone Bash plugin (kept for back-compat)
 ```
+
+See `CLAUDE.md` for the full architecture, and `docs/superpowers/specs/2026-06-13-cli-agent-support-design.md` for the multi-agent design spec.
 
 ## License
 
