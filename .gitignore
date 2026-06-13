@@ -1,2 +1,16 @@
 node_modules
 .worktrees
+
+# macOS
+.DS_Store
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# Local runtime state
+.campy/
+
+# Bun
+bun.lockb

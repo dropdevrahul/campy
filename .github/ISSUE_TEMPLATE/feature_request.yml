@@ -1,0 +1,29 @@
+name: Feature request
+description: Suggest a new pet, agent, or capability
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Why is this worth adding?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+      description: Optional. If you have an idea for how to build it.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of feature?
+      options:
+        - New pet
+        - New agent adapter
+        - New CLI subcommand
+        - Animation / theme
+        - Other
+    validations:
+      required: true
