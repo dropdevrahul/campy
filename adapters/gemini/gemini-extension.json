@@ -1,0 +1,11 @@
+{
+  "name": "campy",
+  "version": "1.0.0",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "campy": {
+      "command": "npx",
+      "args": ["-y", "campy", "mcp"]
+    }
+  }
+}
