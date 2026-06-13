@@ -1,84 +1,186 @@
-import type { PetAnimations } from "../types"
-import { pad } from "../frame-utils"
+import type { PetAnimations, AnimLayer } from "../types"
+import { pad, padAt, SW } from "../frame-utils"
+import { auraFor, groundShadow } from "./effects"
+
+const body = (rows: string[]): string[] => padAt(rows, 2, SW)
+
+// A bigger ghost: rounded dome, soft body, wavy ectoplasm tail.
+const ghostBody = body([
+  "       ╭─────╮        ",
+  "      ╱       ╲       ",
+  "     │         │      ",
+  "     │    o    │      ",
+  "     │         │      ",
+  "      ╲       ╱       ",
+  "   ╲▁╱ ╲▁▁▁▁▁╲▁╱      ",
+  "                      ",
+])
+
+const ghostEyes = (l: string, r: string): string[] =>
+  padAt([`     │  ${l}   ${r}  │      `], 4, SW)
+
+const idleGhBodyLayer: AnimLayer = {
+  id: "body",
+  steps: [{ frame: ghostBody, duration: 4800 }],
+  loop: true,
+}
+
+const idleGhEyesLayer: AnimLayer = {
+  id: "eyes",
+  steps: [
+    { frame: ghostEyes("●", "●"), durationRange: [2400, 4400] },
+    { frame: ghostEyes("-", "-"), duration: 130 },
+    { frame: ghostEyes("·", "·"), duration: 80 },
+    { frame: ghostEyes("-", "-"), duration: 130 },
+  ],
+  loop: true,
+}
+
+// The wavy tail wisps shift left/right — accent layer on row 8.
+const idleGhTailLayer: AnimLayer = {
+  id: "wisp",
+  steps: [
+    { frame: padAt(["   ╲▁╱ ╲▁▁▁▁▁╲▁╱      "], 8, SW), duration: 1100 },
+    { frame: padAt(["    ╲▁╱╲▁▁▁▁▁╱╲▁╱     "], 8, SW), duration: 1100 },
+  ],
+  loop: true,
+}
+
+const happyGh = body([
+  "       ╭─────╮        ",
+  "      ╱       ╲       ",
+  "     │  ^   ^  │      ",
+  "     │    ω    │      ",
+  "     │   boo!  │      ",
+  "      ╲       ╱       ",
+  "   ╲▁╱ ╲▁▁▁▁▁╲▁╱      ",
+  "                      ",
+])
+
+const sleepingGh = body([
+  "       ╭─────╮        ",
+  "      ╱       ╲       ",
+  "     │  -   -  │      ",
+  "     │    z    │      ",
+  "     │   ZZz   │      ",
+  "      ╲       ╱       ",
+  "   ╲▁╱ ╲▁▁▁▁▁╲▁╱      ",
+  "                      ",
+])
+
+const eatingGh = body([
+  "       ╭─────╮        ",
+  "      ╱       ╲       ",
+  "     │  ●   ●  │      ",
+  "     │   nom   │      ",
+  "     │   ~~~   │      ",
+  "      ╲       ╱       ",
+  "   ╲▁╱ ╲▁▁▁▁▁╲▁╱      ",
+  "                      ",
+])
+
+const playingGh = body([
+  "        ╭─────╮       ",
+  "       ╱       ╲      ",
+  "      │  ^   ^  │     ",
+  "      │    ω    │     ",
+  "      │  ~~~~~  │     ",
+  "       ╲       ╱      ",
+  "    ╲▁╱ ╲▁▁▁▁▁╲▁╱     ",
+  "                      ",
+])
+
+const excitedGh = body([
+  "       ╭─────╮        ",
+  "      ╱       ╲       ",
+  "     │  ★   ★  │      ",
+  "     │    ω    │      ",
+  "     │  BOO!!  │      ",
+  "      ╲       ╱       ",
+  "   ╲▁╱ ╲▁▁▁▁▁╲▁╱      ",
+  "                      ",
+])
+
+const sadGh = body([
+  "       ╭─────╮        ",
+  "      ╱       ╲       ",
+  "     │  ╥   ╥  │      ",
+  "     │   ;_;   │      ",
+  "     │         │      ",
+  "      ╲       ╱       ",
+  "   ╲▁╱ ╲▁▁▁▁▁╲▁╱      ",
+  "                      ",
+])
 
 export const ghostAnim: PetAnimations = {
   states: {
-    idle: [
-      {
-        id: "body",
-        steps: [{ frame: pad(["   .-.     ","           ","  | O |    ","  '~~~'    "], 12), duration: 5000 }],
-        loop: true,
-      },
-      {
-        id: "eyes",
-        steps: [
-          { frame: pad(["           ","  (o o)    ","           ","           "], 12), durationRange: [2000, 4000] },
-          { frame: pad(["           ","  (- -)    ","           ","           "], 12), duration: 150 },
-          { frame: pad(["           ","  (· ·)    ","           ","           "], 12), duration: 80 },
-          { frame: pad(["           ","  (- -)    ","           ","           "], 12), duration: 150 },
-        ],
-        loop: true,
-      },
+    idle: [idleGhBodyLayer, idleGhEyesLayer, idleGhTailLayer, groundShadow(), auraFor("idle")!],
+    happy: [
+      { id: "base", steps: [
+        { frame: happyGh, durationRange: [1200, 2400] },
+        { frame: excitedGh, duration: 500 },
+      ], loop: true },
+      groundShadow(),
+      auraFor("happy")!,
     ],
     sleeping: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   .-.     ","  (- -)    ","  | z |    ","  '~~~'    "], 12), durationRange: [2000, 3000] },
-          { frame: pad(["   .-.     ","  (- -)    ","  | Z |    ","  '~~~'    "], 12), duration: 1500 },
-        ],
-        loop: true,
-      },
-    ],
-    happy: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   .-.     ","  (^ ^)    ","  | ω |    ","  '~~~'    ","   boo!    "], 12), durationRange: [1500, 3000] },
-          { frame: pad(["   .-.     ","  (^ ^)    ","  | ♥ |    ","  '~~~'    ","   boo!    "], 12), duration: 800 },
-        ],
-        loop: true,
-      },
+      { id: "base", steps: [
+        { frame: sleepingGh, durationRange: [2400, 3600] },
+        { frame: pad([
+          "                       ",
+          "                       ",
+          "       ╭─────╮        ",
+          "      ╱       ╲       ",
+          "     │  -   -  │      ",
+          "     │    Z    │      ",
+          "     │   ZZZ   │      ",
+          "      ╲       ╱       ",
+          "   ╲▁╱ ╲▁▁▁▁▁╲▁╱      ",
+          "                      ",
+        ], SW), duration: 1800 },
+      ], loop: true },
+      groundShadow(),
+      auraFor("sleeping")!,
     ],
     eating: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   .-.     ","  (o o)    ","  | ω |    ","  '~~~'    ","   nom~    "], 12), duration: 400 },
-          { frame: pad(["   .-.     ","  (o o)    ","  | ω |    ","  '~~~'    ","   nom!    "], 12), duration: 300 },
-        ],
-        loop: true,
-      },
+      { id: "base", steps: [
+        { frame: eatingGh, duration: 360 },
+        { frame: pad([
+          "                       ",
+          "                       ",
+          "       ╭─────╮        ",
+          "      ╱       ╲       ",
+          "     │  ●   ●  │      ",
+          "     │   NOM   │      ",
+          "     │   ~~~   │      ",
+          "      ╲       ╱       ",
+          "   ╲▁╱ ╲▁▁▁▁▁╲▁╱      ",
+          "                      ",
+        ], SW), duration: 280 },
+      ], loop: true },
+      groundShadow(),
+      auraFor("eating")!,
     ],
     playing: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   .-.     ","  (^ ^)    ","  | ω |    ","  '~~~'    ","   ~~~     "], 12), duration: 500 },
-          { frame: pad(["    .-.    ","   (^ ^)   ","   | ω |   ","   '~~~'   ","    ~~~    "], 12), duration: 500 },
-        ],
-        loop: true,
-      },
+      { id: "base", steps: [
+        { frame: playingGh, duration: 420 },
+        { frame: happyGh, duration: 420 },
+      ], loop: true },
+      groundShadow(),
+      auraFor("playing")!,
     ],
     excited: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   .-.     ","  (^ ^)    ","  | ♥ |    ","  '~~~'    ","   BOO!    "], 12), duration: 300 },
-          { frame: pad(["   .-.     ","  (^ ^)    ","  | ♥ |    ","  '~~~'    "], 12), duration: 300 },
-        ],
-        loop: true,
-      },
+      { id: "base", steps: [
+        { frame: excitedGh, duration: 260 },
+        { frame: happyGh, duration: 260 },
+      ], loop: true },
+      groundShadow(),
+      auraFor("excited")!,
     ],
     sad: [
-      {
-        id: "base",
-        steps: [
-          { frame: pad(["   .-.     ","  (T T)    ","  |   |    ","  '~~~'    "], 12), durationRange: [4000, 6000] },
-          { frame: pad(["   .-.     ","  (T T)    ","  | ; |    ","  '~~~'    "], 12), duration: 2000 },
-        ],
-        loop: true,
-      },
+      { id: "base", steps: [{ frame: sadGh, durationRange: [3000, 5000] }], loop: true },
+      groundShadow(),
+      auraFor("sad")!,
     ],
   },
 }
