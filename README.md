@@ -6,6 +6,7 @@
 [![CI](https://github.com/dropdevrahul/campy/actions/workflows/ci.yml/badge.svg)](https://github.com/dropdevrahul/campy/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Made with bun](https://img.shields.io/badge/made%20with-bun-black.svg)](https://bun.sh)
+[Discord](https://discord.gg/aY9Fv5ZRj)
 
 Animated terminal pets for CLI coding agents — Claude Code, OpenCode, Pi, Gemini CLI, Codex CLI, Cursor CLI, Aider.
 
