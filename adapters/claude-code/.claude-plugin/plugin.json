@@ -1,5 +1,9 @@
 {
   "name": "campy",
   "description": "Animated ASCII terminal pets for Claude Code — reacts to your coding with moods, speech bubbles, and happiness.",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "statusLine": {
+    "type": "command",
+    "command": "bash ${CLAUDE_PLUGIN_ROOT}/statusline.sh"
+  }
 }

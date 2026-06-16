@@ -18,7 +18,10 @@ is organized as a **portable `core/` + per-agent adapters** architecture:
 3. **`adapters/pi/`** — Pi coding-agent adapter (in-process TUI widget).
 4. **`adapters/claude-code/`** — Claude Code adapter: short-lived hooks mutate
    the state file via the campy CLI; a `campy watch` pane or the statusline
-   renders. Contains `hooks/`, `commands/`, `.claude-plugin/`, and `statusline.sh`.
+   renders. Wires only two reactive hooks — `PostToolUse` (scoped to
+   `Edit|Write|MultiEdit|NotebookEdit|Bash`) and `Stop` — plus a one-shot
+   `SessionStart`; read-only tools never spawn a process. Contains `hooks/`,
+   `commands/`, `.claude-plugin/`, and `statusline.sh`.
 5. **`adapters/mcp/`** — MCP (stdio) server for agents whose native surface is
    MCP (Gemini CLI, Codex CLI, Cursor CLI). Watches the project dir → `file_edited`
    events, and exposes `campy_*` tools (status/feed/play/pet/switch) returning the
@@ -31,8 +34,11 @@ is organized as a **portable `core/` + per-agent adapters** architecture:
 
 `campy setup` detects installed agents (via `core/detect.ts`) and wires each the
 native way; `campy install <agent>` does one. Native mechanism per agent:
-**Claude Code** → plugin marketplace (`.claude-plugin/marketplace.json`) or hooks
-in settings.json. **OpenCode/Pi** → in-process extension. **Gemini CLI** →
+**Claude Code** → plugin marketplace (`.claude-plugin/marketplace.json`); the
+plugin auto-wires its hooks via `adapters/claude-code/hooks/hooks.json` and its
+statusline via the `statusLine` field in `plugin.json` (both
+`${CLAUDE_PLUGIN_ROOT}`-relative). Or wire the same hooks + statusline manually
+in settings.json (printed by `campy install claude-code`). **OpenCode/Pi** → in-process extension. **Gemini CLI** →
 `~/.gemini/extensions/campy/` + `gemini-extension.json`. **Codex CLI** →
 `[mcp_servers.campy]` in `~/.codex/config.toml`. **Cursor CLI** → `~/.cursor/mcp.json`.
 **Aider** → `.git/hooks/post-commit`. For agents without a widget surface,
@@ -102,7 +108,7 @@ campy/
 │   ├── mcp/server.ts        # MCP stdio server: file-watch events + campy_* tools
 │   ├── gemini/             # gemini-extension.json + GEMINI.md (git-install template)
 │   └── claude-code/         # Claude Code: hooks + statusline + slash commands
-│       ├── hooks/           # session-start.sh, pre-tool-use.sh, post-tool-use.sh, stop.sh
+│       ├── hooks/           # hooks.json + session-start.sh, post-tool-use.sh, stop.sh
 │       ├── commands/        # campy.md, feed.md, play.md, pet.md, switch.md
 │       ├── .claude-plugin/  # plugin.json
 │       └── statusline.sh    # thin wrapper around `campy statusline`
