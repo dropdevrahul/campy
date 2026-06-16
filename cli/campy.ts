@@ -122,8 +122,7 @@ const installClaudeCode = (): void => {
     statusLine: { type: "command", command: `bash ${statusbin}` },
     hooks: {
       SessionStart: [{ hooks: [{ type: "command", command: `bash ${join(hooks, "session-start.sh")}` }] }],
-      PreToolUse: [{ matcher: "*", hooks: [{ type: "command", command: `bash ${join(hooks, "pre-tool-use.sh")}` }] }],
-      PostToolUse: [{ matcher: "*", hooks: [{ type: "command", command: `bash ${join(hooks, "post-tool-use.sh")}` }] }],
+      PostToolUse: [{ matcher: "Edit|Write|MultiEdit|NotebookEdit|Bash", hooks: [{ type: "command", command: `bash ${join(hooks, "post-tool-use.sh")}` }] }],
       Stop: [{ hooks: [{ type: "command", command: `bash ${join(hooks, "stop.sh")}` }] }],
     },
   }, null, 2))
