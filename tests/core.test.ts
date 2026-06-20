@@ -7,6 +7,10 @@ import { reactionFor, isCanonicalEvent } from "../core/events"
 import { clamp, meterBar, HAPPINESS_MIN, HAPPINESS_MAX, DEFAULT_HAPPINESS } from "../core/happiness"
 import { readState, writeState, mutateState, DEFAULT_STATE } from "../core/store"
 import type { PetStoreState } from "../core/store"
+import { PET_ANIMATIONS, PET_NAMES } from "../core/pets"
+import { PET_ICONS } from "../core/theme"
+import { PET_GREETINGS, PET_PERSONALITY } from "../core/personality"
+import { STATES } from "../core/types"
 
 // ---- events ----------------------------------------------------------------
 
@@ -239,5 +243,51 @@ describe("store round-trip", () => {
       statePath
     )
     expect(result.happiness).toBe(HAPPINESS_MAX)
+  })
+})
+
+// ---- new pets registered ---------------------------------------------------
+
+describe("new pets registered", () => {
+  const NEW_PETS = ["dragon", "turtle", "panda", "dog"]
+
+  test("all four new pets are in PET_NAMES and PET_ANIMATIONS", () => {
+    expect(PET_NAMES.length).toBe(8)
+    for (const pet of NEW_PETS) {
+      expect(PET_NAMES).toContain(pet)
+      expect(PET_ANIMATIONS[pet]).toBeTruthy()
+    }
+  })
+
+  test("each new pet has all 7 PetState keys in PET_ANIMATIONS with non-empty AnimLayer[]", () => {
+    for (const pet of NEW_PETS) {
+      for (const s of STATES) {
+        const layers = PET_ANIMATIONS[pet]?.states[s]
+        expect(layers).toBeTruthy()
+        expect(layers!.length).toBeGreaterThan(0)
+      }
+    }
+  })
+
+  test("each new pet has a truthy PET_ICONS entry", () => {
+    for (const pet of NEW_PETS) {
+      expect(PET_ICONS[pet]).toBeTruthy()
+    }
+  })
+
+  test("each new pet has a truthy PET_GREETINGS entry", () => {
+    for (const pet of NEW_PETS) {
+      expect(PET_GREETINGS[pet]).toBeTruthy()
+    }
+  })
+
+  test("each new pet has PET_PERSONALITY entries for all 7 states with non-empty string[]", () => {
+    for (const pet of NEW_PETS) {
+      for (const s of STATES) {
+        const phrases = PET_PERSONALITY[pet]?.[s]
+        expect(phrases).toBeTruthy()
+        expect(phrases!.length).toBeGreaterThan(0)
+      }
+    }
   })
 })

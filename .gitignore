@@ -1,2 +1,4 @@
 node_modules
 .worktrees
+.nexum-data
+.DS_Store
