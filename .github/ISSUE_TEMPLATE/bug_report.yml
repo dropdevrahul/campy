@@ -1,0 +1,56 @@
+name: Bug report
+description: Something in campy is broken or behaving unexpectedly
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report — a focused reproduction makes fixes fast.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the behavior you saw and what you expected.
+      placeholder: "When I ran `campy attach` in zellij, ..."
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Install with `bun add -g github:dropdevrahul/campy`
+        2. Run `campy install claude-code`
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Which agent are you using?
+      options:
+        - Claude Code
+        - OpenCode
+        - Pi
+        - Gemini CLI
+        - Codex CLI
+        - Cursor CLI
+        - Aider
+        - Not agent-specific
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: OS, terminal, bun version (`bun --version`)
+      placeholder: "macOS 14.5, Ghostty 1.0, bun 1.3.12"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or state file contents
+      description: Output of `campy status`, contents of `~/.campy/state.json`, or terminal output. Use code fences.
+      render: shell
