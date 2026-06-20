@@ -14,6 +14,10 @@ const MINI_FACE: Record<string, [string, string]> = {
   hamster: ["(\\_/)", "(='.'=)"],
   ghost: ["(^-^)ノ⌒", "(～^-^)～"],
   robot: ["[o_o]", "[-_-]"],
+  dragon: ["(/\\o o/\\)", "(/\\^ ^/\\)"],
+  turtle: ["(@ o o @)", "(@ - - @)"],
+  panda: ["(@^.^@)", "(@^ω^@)"],
+  dog: ["(o-|-o)", "(^-|-^)"],
 }
 
 export const miniFace = (pet: string, frame = 0): string => {

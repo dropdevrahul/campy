@@ -25,6 +25,10 @@ export const PET_ICONS: Record<string, string> = {
   hamster: "🐹",
   ghost: "👻",
   robot: "🤖",
+  dragon: "🐉",
+  turtle: "🐢",
+  panda: "🐼",
+  dog: "🐶",
 }
 
 // Per-pet accent colors used by the GIF player.
@@ -32,6 +36,10 @@ export const PET_COLORS: Record<string, string> = {
   cat: "#bd93f9",
   ghost: "#f1fa8c",
   robot: "#50fa7b",
+  dragon: "#ff5555",
+  turtle: "#50fa7b",
+  panda: "#f8f8f2",
+  dog: "#ffb86c",
 }
 
 // 24-bit ANSI foreground escape for a "#rrggbb" hex color, for terminal surfaces.

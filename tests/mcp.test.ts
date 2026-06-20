@@ -49,7 +49,7 @@ test("campy_switch to a valid pet updates the store", () => {
 })
 
 test("campy_switch to an unknown pet is an error result", () => {
-  const res = call("campy_switch", { pet: "dragon" })
+  const res = call("campy_switch", { pet: "unicorn" })
   expect(res.result.isError).toBe(true)
 })
 
