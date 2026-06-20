@@ -1,6 +1,6 @@
 {
   "name": "campy",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Animated terminal pets for CLI coding agents (Claude Code, OpenCode, Pi, Gemini CLI, Codex CLI, Cursor CLI)",
   "main": ".opencode/plugins/pets.tsx",
   "bin": {
