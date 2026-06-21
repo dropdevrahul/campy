@@ -1,0 +1,42 @@
+site_name: campy
+site_url: https://dropdevrahul.github.io/campy/
+site_description: Animated ASCII terminal pets for CLI coding agents
+site_author: dropdevrahul
+repo_url: https://github.com/dropdevrahul/campy
+repo_name: dropdevrahul/campy
+
+docs_dir: docs
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.top
+    - search.suggest
+    - content.code.copy
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Agents: agents.md
+  - Commands: commands.md
+  - Pets: pets.md
+  - Architecture: architecture.md
+  - Contributing: contributing.md
