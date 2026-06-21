@@ -16,3 +16,6 @@ node_modules
 
 # Bun
 bun.lockb
+
+# MkDocs build output
+site/
